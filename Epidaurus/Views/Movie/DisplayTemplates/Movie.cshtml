@@ -1,0 +1,113 @@
+﻿@model Epidaurus.Domain.Entities.Movie
+@using Epidaurus.Helpers;
+
+@{var whoHasSeen = ViewBag.WhoHasSeenMovie as Dictionary<int,List<string>>;}
+
+    <div class="movieContainer" id="mc_@(Model.Id)">
+        @if (Model.ImageUrl != null)
+        { 
+            <div style="float: right">
+                <div class="posterFullSize">
+                    <img src="@Url.Action("Poster", new { id = @Model.ImdbId })" alt="Poster"/>
+                </div>
+                <img class="posterImage" src="@Url.Action("Poster", new { id = @Model.ImdbId })" width="200" alt="Poster" /> 
+            </div>
+        }
+        
+        <table>
+            <tr><td> </td> <td class="movieTitle">@Model.Title</td></tr>
+            <tr><td>År</td><td>@Model.Year</td></tr>
+            <tr><td>Lengde</td><td>@if (Model.Runtime.HasValue)
+                                    { @MH.RuntimeHelper(Model.Runtime.Value);
+                                    }</td></tr>
+            <tr><td>IMDB Score</td><td>@MH.ScoreHelper(Model.Score)</td></tr>
+            <tr><td>Imdb </td>
+                <td>
+                    <a href="http://www.imdb.com/title/@Model.ImdbId">@Model.ImdbId</a>
+                    <span class="changeImdbDiv" onclick="ShowImdbIdEditBox(this, @Model.Id, 'mc_@(Model.Id)')">(Endre)</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Genre</td>
+                <td>
+                    @foreach (var genre in @Model.Genres)
+                    { 
+                        <a href="javascript:null();" onclick="SetFilter('Genre',@genre.Id);">@genre.Name</a>  
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Regisører</td>
+                <td>
+                    @foreach (var director in @Model.Directors)
+                    { 
+                        <a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Name</a>  
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Forfattere</td>
+                <td>
+                    @foreach (var writer in @Model.Writers)
+                    { 
+                        <a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Name</a>  
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Skuespillere</td>
+                <td>
+                    @foreach (var actor in @Model.Actors)
+                    { 
+                        <a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);">@actor.Name</a>  
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Lokal lokasjon</td>
+                <td>
+                    @foreach (var movieSource in @Model.MovieAtStorages)
+                    { 
+                        <span>@movieSource.CleanedName <span class="movieSourceClicky clickable" data-moviesourceid="@movieSource.Id">@@</span> @movieSource.StorageLocation.Name, </span>
+                    }
+                </td>
+            </tr>
+            <tr><td>Plot</td><td>@Model.Plot</td></tr>
+            <tr><td>Lagt til</td><td>@Model.AddedAt.ToShortDateString()</td></tr>
+
+            <tr>
+                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                { 
+                    <td>Sett?</td>
+                    <td>
+                        @if (@ViewBag.MoviesIHaveSeen != null)
+                        {
+                            if (@ViewBag.MoviesIHaveSeen.Contains(Model.Id))
+                            { 
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @Model.Id, false)">Ja. (Klikk for å endre.)</span>
+                            }
+                            else
+                            { 
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @Model.Id, true)">Nei. (Klikk for å markere som sett.)</span>
+                            }
+                        }
+                        else
+                        { 
+                            <span>?</span>
+                        }
+                        <span style="margin-left: 2em;">
+                            <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@Model.ImdbId">Klikk</a> for å legge til i Vil Se listen...
+                        </span>
+                    </td>
+                }
+            </tr>
+            @if (whoHasSeen != null && whoHasSeen.ContainsKey(Model.Id))
+            { 
+                <tr>
+                    <td>Sett av:</td>
+                    <td>@string.Join(", ", whoHasSeen[Model.Id])</td>
+               </tr>
+            }
+        </table>
+        <div style="clear: both; height: 1px;" >&nbsp;</div>
+    </div>

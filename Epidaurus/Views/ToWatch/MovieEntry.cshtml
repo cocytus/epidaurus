@@ -1,0 +1,49 @@
+﻿@model Epidaurus.Domain.Entities.ToWatch
+@using Epidaurus.Helpers;
+@{
+    this.Layout = null;
+}
+
+<style type="text/css">
+.toWatchRelated td 
+{
+    color: #A0FFA0;
+}
+</style>
+
+<div class="movieContainer" id="tw_@(Model.MovieId)">
+    @if (Model.Movie.ImageUrl != null)
+    { 
+        <div style="float: right">
+            <div class="posterFullSize">
+                <img src="@Url.Action("Poster", "Movie", new { id = @Model.Movie.ImdbId })" alt="Poster"/>
+            </div>
+            <img class="posterImage" src="@Url.Action("Poster", "Movie", new { id = @Model.Movie.ImdbId })" width="120" alt="Poster" /> 
+        </div>
+    }
+        
+    <table>
+        <tr><td> </td> <td class="movieTitle">@Model.Movie.Title</td></tr>
+        @if (Model.User.Username == User.Identity.Name)
+        { 
+            <tr class="toWatchRelated"><td> </td><td><a href="javascript:void(0);" data-movieId="@Model.Movie.Id" class="removeToWatch">Vil ikke se lenger...</a></td></tr>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Comment))
+        {
+            <tr class="toWatchRelated"><td>Kommentar</td><td>@Model.Comment</td></tr> 
+        }
+        <tr><td>År</td><td>@Model.Movie.Year</td></tr>
+        <tr><td>Lengde</td><td>@if (Model.Movie.Runtime.HasValue) { @MH.RuntimeHelper(Model.Movie.Runtime.Value); }</td></tr>
+        <tr><td>IMDB Score</td><td>@MH.ScoreHelper(Model.Movie.Score)</td></tr>
+        <tr><td>Imdb </td>
+            <td><a href="http://www.imdb.com/title/@Model.Movie.ImdbId">@Model.Movie.ImdbId</a></td>
+        </tr>
+        <tr>
+            <td>Genre</td>
+            <td>@string.Join(", ", Model.Movie.Genres.Select(el=>el.Name))</td>
+        </tr>
+        <tr><td>Plot</td><td>@Model.Movie.Plot</td></tr>
+        <tr><td>Lagt til</td><td>@Model.Movie.AddedAt.ToShortDateString()</td></tr>
+    </table>
+    <div style="clear: both; height: 1px;" >&nbsp;</div>
+</div>

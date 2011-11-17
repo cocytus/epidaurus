@@ -1,0 +1,27 @@
+﻿@model Epidaurus.ScannerLib.Utils.SearchResult[]
+
+@if (Model.Length == 0) {
+    <h2>No results found</h2>
+} else {
+    <div id="imdbIdSearchResults">
+        <table>
+        @foreach (var item in Model) {
+            <tr class="searchResult" data-imdbid="@item.Url">
+                <td><a href="#" class="selectImdbId">@item.Title</a></td>
+                <td class="iframecontainer" style="width: 500px">
+                    <iframe src="@item.Url" width="500px" height="350px" frameborder="0"></iframe>
+                </td>
+            </tr>
+        }
+        </table>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#imdbIdSearchResults .selectImdbId").bind("click", function () {
+        var imdbid = $(this).closest(".searchResult").attr("data-imdbid");
+        $(this).closest(".ui-dialog-content").dialog("close");
+        document.movieSelectedMethod(imdbid);
+        return false;
+    });
+</script>

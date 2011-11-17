@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/themes/ui-darkness/jquery-ui-1.8.13.custom.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.5.1.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.13.js")" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="navigateHeader">
+        <ul>
+            <li>@Html.ActionLink("Filmer", "", "Movie")</li>
+            <li>@Html.ActionLink("Vil Se", "", "ToWatch")</li>
+            <li>@Html.ActionLink("Brukere", "", "Users")</li>
+            <li>
+                @if (HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Logout", "Logout", "Login")
+                }
+                else
+                { 
+                    @Html.ActionLink("Login", "LogOn", "Login")
+                }
+            </li>
+        </ul>
+    </div>
+    <div id="navigateHeaderSpacing"></div>
+    <div id="bodyContainer">
+        @RenderBody()
+    </div>
+
+    <script type="text/javascript">
+        var navigateHeaderHeight = $("#navigateHeader").outerHeight(true);
+        $("#navigateHeaderSpacing").css("height", navigateHeaderHeight);
+    </script>
+</body>
+</html>

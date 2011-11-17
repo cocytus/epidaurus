@@ -1,0 +1,10 @@
+bin/
+obj/
+*.suo
+*.user
+TestResults/
+packages/
+*.docstates
+
+_ReSharper.*/
+*.Publish.xml

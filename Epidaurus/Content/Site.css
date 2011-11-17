@@ -1,0 +1,228 @@
+body
+{
+    font-size: 75%;
+    font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
+    color: white;
+    background-color: black;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+
+fieldset 
+{
+    border:1px solid #ddd;
+    padding:0 1.4em 1.4em 1.4em;
+    margin:0 0 1.5em 0;
+}
+
+legend 
+{
+    font-size:1.2em;
+    font-weight: bold;
+}
+
+textarea 
+{
+    min-height: 75px;
+}
+
+.editor-label 
+{
+    margin: 1em 0 0 0;
+}
+
+.editor-field 
+{
+    margin:0.5em 0 0 0;
+}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error
+{
+    color: #ff0000;
+}
+
+.field-validation-valid
+{
+    display: none;
+}
+
+.input-validation-error
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid
+{
+    display: none;
+}
+
+
+.movieBottom
+{
+    border-bottom: 1px solid red;
+}
+
+.movieTitle
+{
+    font-size: large;
+    font-weight: bold;
+}
+
+.movieContainer
+{
+    clear: both;
+    border: 1px solid lightblue;
+    margin-top: 1em;
+    background: #101010;
+}
+
+img 
+{
+    border: 0px;
+}
+
+#navigateHeader
+{
+    margin: 0px;
+    padding: 0.5em;
+    background-color: #202020;
+    border-width: 0px;
+    border-bottom: 1px solid white;
+}
+
+#navigateHeader a, #navigateHeader a:visited, #navigateHeader a:hover
+{
+    color: #A0A0FF;
+    text-decoration: none;
+    margin-left: 2em;
+}
+
+#navigateHeader a:before
+{
+    content: "[";
+}
+
+#navigateHeader a:after
+{
+    content: "]";
+}
+
+#navigateHeader ul
+{
+    margin: 0px;
+}
+
+#navigateHeader li
+{
+    display: inline;
+}
+
+a, a:hover, a:visited
+{
+    color: #B0FFB0;
+    text-decoration: none;
+}
+
+#moviesContainer
+{
+    padding: 1em;
+}
+
+.clickable
+{
+    cursor: pointer;
+}
+
+#imdbIdSearchResults a, #imdbIdSearchResults a:visited
+{
+    color: #B0FFB0;
+}
+
+#imdbIdSearchResults .selectImdbId
+{
+    font-size: 120%;
+    color: Green;
+}
+
+#imdbIdSearchResults table
+{
+    width: 100%;
+}
+
+#imdbIdSearchResults td
+{
+    border-top: 1px solid red;
+}
+
+#imdbIdSearchResults tr:first-child td
+{
+    border-top: none;
+}
+
+#imdbIdSearchResults .iframecontainer
+{
+    background-color: White;
+}
+
+.posterFullSize
+{
+    display: none;
+    position: absolute;
+    margin-left: -400px;
+    margin-top: -60px;
+    border: 1px solid white;
+    padding: 2px;
+    background-color: Black;
+}
+
+#filterFormContainer
+{
+    background: black;
+    position: fixed;
+    width: 100%;
+    padding-bottom: 0.5em;
+    border-bottom: 4px double #B0FFB0;
+    //border-bottom-style:
+}
+
+#filterFormContainer h2
+{
+    margin-left: 1em;
+}
+
+#filterFormContainer form
+{
+    margin-left: 1em;
+}
+
+
+#navigateHeader
+{
+    position: fixed;
+    width: 100%;
+}
+
+input, select
+{
+    background: #202020;
+    color: White;
+    border: 1px solid #505050;
+}
+
+select option:hover
+{
+    background-color: #B0FFB0;
+}

@@ -1,0 +1,53 @@
+﻿
+<div id="dialogContainer" title="IMDB" style="display: none;">
+    <div>
+        <form method="get" action="?">
+            <div>
+                Endre søk: <input type="text" name="imdbSearchString" />
+                <button type="submit" name="imdbSearchButton">Search</button>
+            </div>
+        </form>
+        <p>Klikk på tittel for å velge film.</p>
+        <div class="imdbSearchResults">
+            Søkeresultater...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $("#dialogContainer form").bind("submit", function() { DoSearch(); return false; });
+    });
+
+    function MovieSelectDialog(initialSearch, selectFunction)
+    {
+        document.movieSelectedMethod = selectFunction;
+        var jdc = $("#dialogContainer");
+        jdc.dialog({
+            modal : true,
+            position: "center",
+            width : 900,
+            height : 600,
+            buttons : [ { text: "Cancel", click: function() { $(this).dialog("close"); } } ]
+        });
+
+        jdc.find("input[name=imdbSearchString]").val(initialSearch);
+        if (typeof initialSearch == "string" && initialSearch.length > 0)
+            DoSearch();
+    }
+
+
+    function DoSearch()
+    {
+        var jdc = $("#dialogContainer");
+        var searchFor = jdc.find("input[name=imdbSearchString]").val();
+        if (searchFor.length == 0) {
+            alert("SearchSring empty");
+            return false;
+        }
+
+        $("#dialogContainer .imdbSearchResults").html("<h3>Søker...</h3>");
+
+        $.get("@Url.Action("GetImdbSearchResults", "Movie")", { q : searchFor }, function(data) { $("#dialogContainer .imdbSearchResults").html(data); });
+    }
+</script>

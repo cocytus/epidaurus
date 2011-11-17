@@ -1,0 +1,912 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EpidaurusDb.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="EpidaurusDbStoreContainer">
+    <EntitySet Name="Users" EntityType="EpidaurusDb.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Movies" EntityType="EpidaurusDb.Store.Movies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovieAtStorages" EntityType="EpidaurusDb.Store.MovieAtStorages" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StorageLocations" EntityType="EpidaurusDb.Store.StorageLocations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SeenStatuses" EntityType="EpidaurusDb.Store.SeenStatuses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Genres" EntityType="EpidaurusDb.Store.Genres" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="People" EntityType="EpidaurusDb.Store.People" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RememberedSessions" EntityType="EpidaurusDb.Store.RememberedSessions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ToWatches" EntityType="EpidaurusDb.Store.ToWatches" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GenreMovie" EntityType="EpidaurusDb.Store.GenreMovie" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovieWriter" EntityType="EpidaurusDb.Store.MovieWriter" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovieActor" EntityType="EpidaurusDb.Store.MovieActor" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovieDirector" EntityType="EpidaurusDb.Store.MovieDirector" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="MovieSeenStatus" Association="EpidaurusDb.Store.MovieSeenStatus">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="SeenStatus" EntitySet="SeenStatuses" />
+    </AssociationSet>
+    <AssociationSet Name="StorageLocationMovieSource" Association="EpidaurusDb.Store.StorageLocationMovieSource">
+      <End Role="StorageLocation" EntitySet="StorageLocations" />
+      <End Role="MovieSource" EntitySet="MovieAtStorages" />
+    </AssociationSet>
+    <AssociationSet Name="UserSeenStatus" Association="EpidaurusDb.Store.UserSeenStatus">
+      <End Role="User" EntitySet="Users" />
+      <End Role="SeenStatus" EntitySet="SeenStatuses" />
+    </AssociationSet>
+    <AssociationSet Name="MovieMovieAtStorage" Association="EpidaurusDb.Store.MovieMovieAtStorage">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="MovieAtStorage" EntitySet="MovieAtStorages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GenreMovie_Genre" Association="EpidaurusDb.Store.FK_GenreMovie_Genre">
+      <End Role="Genre" EntitySet="Genres" />
+      <End Role="GenreMovie" EntitySet="GenreMovie" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GenreMovie_Movie" Association="EpidaurusDb.Store.FK_GenreMovie_Movie">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="GenreMovie" EntitySet="GenreMovie" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieWriter_Movie" Association="EpidaurusDb.Store.FK_MovieWriter_Movie">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="MovieWriter" EntitySet="MovieWriter" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieWriter_Person" Association="EpidaurusDb.Store.FK_MovieWriter_Person">
+      <End Role="Person" EntitySet="People" />
+      <End Role="MovieWriter" EntitySet="MovieWriter" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieActor_Movie" Association="EpidaurusDb.Store.FK_MovieActor_Movie">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="MovieActor" EntitySet="MovieActor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieActor_Person" Association="EpidaurusDb.Store.FK_MovieActor_Person">
+      <End Role="Person" EntitySet="People" />
+      <End Role="MovieActor" EntitySet="MovieActor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieDirector_Movie" Association="EpidaurusDb.Store.FK_MovieDirector_Movie">
+      <End Role="Movie" EntitySet="Movies" />
+      <End Role="MovieDirector" EntitySet="MovieDirector" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MovieDirector_Person" Association="EpidaurusDb.Store.FK_MovieDirector_Person">
+      <End Role="Person" EntitySet="People" />
+      <End Role="MovieDirector" EntitySet="MovieDirector" />
+    </AssociationSet>
+    <AssociationSet Name="UserRememberedSessions" Association="EpidaurusDb.Store.UserRememberedSessions">
+      <End Role="User" EntitySet="Users" />
+      <End Role="RememberedSessions" EntitySet="RememberedSessions" />
+    </AssociationSet>
+    <AssociationSet Name="UserToWatch" Association="EpidaurusDb.Store.UserToWatch">
+      <End Role="User" EntitySet="Users" />
+      <End Role="ToWatch" EntitySet="ToWatches" />
+    </AssociationSet>
+    <AssociationSet Name="ToWatchMovie" Association="EpidaurusDb.Store.ToWatchMovie">
+      <End Role="ToWatch" EntitySet="ToWatches" />
+      <End Role="Movie" EntitySet="Movies" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="32" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastLogin" Type="datetime" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="IsAdmin" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Movies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Score" Type="int" Nullable="false" />
+    <Property Name="ImdbId" Type="nvarchar" Nullable="true" MaxLength="16" />
+    <Property Name="Plot" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Year" Type="smallint" Nullable="false" />
+    <Property Name="ImdbQueried" Type="bit" Nullable="false" />
+    <Property Name="SeriesSeason" Type="smallint" Nullable="true" />
+    <Property Name="SeriesEpisode" Type="smallint" Nullable="true" />
+    <Property Name="ImageUrl" Type="nvarchar" Nullable="true" MaxLength="256" />
+    <Property Name="Runtime" Type="int" Nullable="true" />
+    <Property Name="AddedAt" Type="datetime" Nullable="false" />
+    <Property Name="ImdbQueryFailCount" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MovieAtStorages">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RelativePath" Type="nvarchar" Nullable="false" MaxLength="512" />
+    <Property Name="SampleRelativePath" Type="nvarchar" Nullable="true" MaxLength="512" />
+    <Property Name="CleanedName" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="Ignore" Type="bit" Nullable="false" />
+    <Property Name="StorageLocation_Id" Type="int" Nullable="false" />
+    <Property Name="Movie_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StorageLocations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="Type" Type="nvarchar" Nullable="false" MaxLength="32" />
+    <Property Name="Data1" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Data2" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Rebase" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SeenStatuses">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="SeenAt" Type="datetime" Nullable="false" />
+    <Property Name="Review" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Score" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Movie_Id" Type="int" Nullable="false" />
+    <Property Name="User_Username" Type="nvarchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Genres">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="64" />
+  </EntityType>
+  <EntityType Name="People">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RememberedSessions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserUsername" Type="nvarchar" Nullable="false" MaxLength="32" />
+    <Property Name="GuidHash" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ToWatches">
+    <Key>
+      <PropertyRef Name="UserUsername" />
+      <PropertyRef Name="MovieId" />
+    </Key>
+    <Property Name="UserUsername" Type="nvarchar" Nullable="false" MaxLength="32" />
+    <Property Name="MovieId" Type="int" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar" Nullable="false" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="GenreMovie">
+    <Key>
+      <PropertyRef Name="Genres_Id" />
+      <PropertyRef Name="Movies_Id" />
+    </Key>
+    <Property Name="Genres_Id" Type="int" Nullable="false" />
+    <Property Name="Movies_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MovieWriter">
+    <Key>
+      <PropertyRef Name="MoviesWhereWriter_Id" />
+      <PropertyRef Name="Writers_Id" />
+    </Key>
+    <Property Name="MoviesWhereWriter_Id" Type="int" Nullable="false" />
+    <Property Name="Writers_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MovieActor">
+    <Key>
+      <PropertyRef Name="MoviesWhereActor_Id" />
+      <PropertyRef Name="Actors_Id" />
+    </Key>
+    <Property Name="MoviesWhereActor_Id" Type="int" Nullable="false" />
+    <Property Name="Actors_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MovieDirector">
+    <Key>
+      <PropertyRef Name="MoviesWhereDirector_Id" />
+      <PropertyRef Name="Directors_Id" />
+    </Key>
+    <Property Name="MoviesWhereDirector_Id" Type="int" Nullable="false" />
+    <Property Name="Directors_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="MovieSeenStatus">
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SeenStatus" Type="EpidaurusDb.Store.SeenStatuses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SeenStatus">
+        <PropertyRef Name="Movie_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="StorageLocationMovieSource">
+    <End Role="StorageLocation" Type="EpidaurusDb.Store.StorageLocations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="MovieSource" Type="EpidaurusDb.Store.MovieAtStorages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StorageLocation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieSource">
+        <PropertyRef Name="StorageLocation_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserSeenStatus">
+    <End Role="User" Type="EpidaurusDb.Store.Users" Multiplicity="1" />
+    <End Role="SeenStatus" Type="EpidaurusDb.Store.SeenStatuses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Username" />
+      </Principal>
+      <Dependent Role="SeenStatus">
+        <PropertyRef Name="User_Username" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MovieMovieAtStorage">
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="MovieAtStorage" Type="EpidaurusDb.Store.MovieAtStorages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieAtStorage">
+        <PropertyRef Name="Movie_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserRememberedSessions">
+    <End Role="User" Type="EpidaurusDb.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RememberedSessions" Type="EpidaurusDb.Store.RememberedSessions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Username" />
+      </Principal>
+      <Dependent Role="RememberedSessions">
+        <PropertyRef Name="UserUsername" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserToWatch">
+    <End Role="User" Type="EpidaurusDb.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ToWatch" Type="EpidaurusDb.Store.ToWatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Username" />
+      </Principal>
+      <Dependent Role="ToWatch">
+        <PropertyRef Name="UserUsername" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ToWatchMovie">
+    <End Role="ToWatch" Type="EpidaurusDb.Store.ToWatches" Multiplicity="*" />
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ToWatch">
+        <PropertyRef Name="MovieId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GenreMovie_Genre">
+    <End Role="Genre" Type="EpidaurusDb.Store.Genres" Multiplicity="1" />
+    <End Role="GenreMovie" Type="EpidaurusDb.Store.GenreMovie" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Genre">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GenreMovie">
+        <PropertyRef Name="Genres_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GenreMovie_Movie">
+    <End Role="GenreMovie" Type="EpidaurusDb.Store.GenreMovie" Multiplicity="*" />
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GenreMovie">
+        <PropertyRef Name="Movies_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieWriter_Movie">
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1" />
+    <End Role="MovieWriter" Type="EpidaurusDb.Store.MovieWriter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieWriter">
+        <PropertyRef Name="MoviesWhereWriter_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieWriter_Person">
+    <End Role="MovieWriter" Type="EpidaurusDb.Store.MovieWriter" Multiplicity="*" />
+    <End Role="Person" Type="EpidaurusDb.Store.People" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieWriter">
+        <PropertyRef Name="Writers_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieActor_Movie">
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1" />
+    <End Role="MovieActor" Type="EpidaurusDb.Store.MovieActor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieActor">
+        <PropertyRef Name="MoviesWhereActor_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieActor_Person">
+    <End Role="MovieActor" Type="EpidaurusDb.Store.MovieActor" Multiplicity="*" />
+    <End Role="Person" Type="EpidaurusDb.Store.People" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieActor">
+        <PropertyRef Name="Actors_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieDirector_Movie">
+    <End Role="Movie" Type="EpidaurusDb.Store.Movies" Multiplicity="1" />
+    <End Role="MovieDirector" Type="EpidaurusDb.Store.MovieDirector" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieDirector">
+        <PropertyRef Name="MoviesWhereDirector_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MovieDirector_Person">
+    <End Role="MovieDirector" Type="EpidaurusDb.Store.MovieDirector" Multiplicity="*" />
+    <End Role="Person" Type="EpidaurusDb.Store.People" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieDirector">
+        <PropertyRef Name="Directors_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Epidaurus.Domain.Entities" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="EpidaurusDbContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="Epidaurus.Domain.Entities.User" />
+          <EntitySet Name="Movies" EntityType="Epidaurus.Domain.Entities.Movie" />
+          <EntitySet Name="MovieAtStorages" EntityType="Epidaurus.Domain.Entities.MovieAtStorage" />
+          <EntitySet Name="StorageLocations" EntityType="Epidaurus.Domain.Entities.StorageLocation" />
+          <EntitySet Name="SeenStatuses" EntityType="Epidaurus.Domain.Entities.SeenStatus" />
+          <AssociationSet Name="MovieSeenStatus" Association="Epidaurus.Domain.Entities.MovieSeenStatus">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="SeenStatus" EntitySet="SeenStatuses" />
+          </AssociationSet>
+          <AssociationSet Name="StorageLocationMovieSource" Association="Epidaurus.Domain.Entities.StorageLocationMovieSource">
+            <End Role="StorageLocation" EntitySet="StorageLocations" />
+            <End Role="MovieSource" EntitySet="MovieAtStorages" />
+          </AssociationSet>
+          <AssociationSet Name="UserSeenStatus" Association="Epidaurus.Domain.Entities.UserSeenStatus">
+            <End Role="User" EntitySet="Users" />
+            <End Role="SeenStatus" EntitySet="SeenStatuses" />
+          </AssociationSet>
+          <AssociationSet Name="MovieMovieAtStorage" Association="Epidaurus.Domain.Entities.MovieMovieAtStorage">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="MovieAtStorage" EntitySet="MovieAtStorages" />
+          </AssociationSet>
+          <EntitySet Name="Genres" EntityType="Epidaurus.Domain.Entities.Genre" />
+          <AssociationSet Name="GenreMovie" Association="Epidaurus.Domain.Entities.GenreMovie">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="Movie" EntitySet="Movies" />
+          </AssociationSet>
+          <EntitySet Name="People" EntityType="Epidaurus.Domain.Entities.Person" />
+          <AssociationSet Name="MovieWriter" Association="Epidaurus.Domain.Entities.MovieWriter">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="MovieActor" Association="Epidaurus.Domain.Entities.MovieActor">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="MovieDirector" Association="Epidaurus.Domain.Entities.MovieDirector">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <EntitySet Name="RememberedSessions" EntityType="Epidaurus.Domain.Entities.RememberedSessions" />
+          <AssociationSet Name="UserRememberedSessions" Association="Epidaurus.Domain.Entities.UserRememberedSessions">
+            <End Role="User" EntitySet="Users" />
+            <End Role="RememberedSessions" EntitySet="RememberedSessions" />
+          </AssociationSet>
+          <EntitySet Name="ToWatches" EntityType="Epidaurus.Domain.Entities.ToWatch" />
+          <AssociationSet Name="UserToWatch" Association="Epidaurus.Domain.Entities.UserToWatch">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ToWatch" EntitySet="ToWatches" />
+          </AssociationSet>
+          <AssociationSet Name="ToWatchMovie" Association="Epidaurus.Domain.Entities.ToWatchMovie">
+            <End Role="ToWatch" EntitySet="ToWatches" />
+            <End Role="Movie" EntitySet="Movies" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="Password" Nullable="false" />
+          <Property Type="DateTime" Name="LastLogin" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="64" />
+          <NavigationProperty Name="SeenStatuses" Relationship="Epidaurus.Domain.Entities.UserSeenStatus" FromRole="User" ToRole="SeenStatus" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="false" />
+          <NavigationProperty Name="RememberedSessions" Relationship="Epidaurus.Domain.Entities.UserRememberedSessions" FromRole="User" ToRole="RememberedSessions" />
+          <NavigationProperty Name="ToWatches" Relationship="Epidaurus.Domain.Entities.UserToWatch" FromRole="User" ToRole="ToWatch" />
+        </EntityType>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Title" Nullable="false" />
+          <Property Type="Int32" Name="Score" Nullable="false" />
+          <NavigationProperty Name="SeenStatues" Relationship="Epidaurus.Domain.Entities.MovieSeenStatus" FromRole="Movie" ToRole="SeenStatus" />
+          <Property Type="String" Name="ImdbId" MaxLength="16" />
+          <Property Type="String" Name="Plot" />
+          <Property Type="Int16" Name="Year" Nullable="false" />
+          <Property Type="Boolean" Name="ImdbQueried" Nullable="false" />
+          <Property Type="Int16" Name="SeriesSeason" Nullable="true" />
+          <Property Type="Int16" Name="SeriesEpisode" Nullable="true" />
+          <NavigationProperty Name="MovieAtStorages" Relationship="Epidaurus.Domain.Entities.MovieMovieAtStorage" FromRole="Movie" ToRole="MovieAtStorage" />
+          <Property Type="String" Name="ImageUrl" Nullable="true" MaxLength="256" />
+          <Property Type="Int32" Name="Runtime" Nullable="true" />
+          <NavigationProperty Name="Genres" Relationship="Epidaurus.Domain.Entities.GenreMovie" FromRole="Movie" ToRole="Genre" />
+          <NavigationProperty Name="Writers" Relationship="Epidaurus.Domain.Entities.MovieWriter" FromRole="Movie" ToRole="Person" />
+          <NavigationProperty Name="Actors" Relationship="Epidaurus.Domain.Entities.MovieActor" FromRole="Movie" ToRole="Person" />
+          <NavigationProperty Name="Directors" Relationship="Epidaurus.Domain.Entities.MovieDirector" FromRole="Movie" ToRole="Person" />
+          <Property Type="DateTime" Name="AddedAt" Nullable="false" />
+          <NavigationProperty Name="ToWatches" Relationship="Epidaurus.Domain.Entities.ToWatchMovie" FromRole="Movie" ToRole="ToWatch" />
+          <Property Type="Int32" Name="ImdbQueryFailCount" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MovieAtStorage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="StorageLocation" Relationship="Epidaurus.Domain.Entities.StorageLocationMovieSource" FromRole="MovieSource" ToRole="StorageLocation" />
+          <Property Type="String" Name="RelativePath" Nullable="false" MaxLength="512" />
+          <Property Type="String" Name="SampleRelativePath" MaxLength="512" Nullable="true" />
+          <Property Type="String" Name="CleanedName" Nullable="false" MaxLength="64" />
+          <NavigationProperty Name="Movie" Relationship="Epidaurus.Domain.Entities.MovieMovieAtStorage" FromRole="MovieAtStorage" ToRole="Movie" />
+          <Property Type="Boolean" Name="Ignore" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StorageLocation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="64" />
+          <NavigationProperty Name="MovieSources" Relationship="Epidaurus.Domain.Entities.StorageLocationMovieSource" FromRole="StorageLocation" ToRole="MovieSource" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="Data1" Nullable="false" />
+          <Property Type="String" Name="Data2" Nullable="false" />
+          <Property Type="String" Name="Rebase" Nullable="false" MaxLength="64" />
+          <Property Type="Boolean" Name="Active" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SeenStatus" >
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="DateTime" Name="SeenAt" Nullable="false" />
+          <Property Type="String" Name="Review" Nullable="false" />
+          <Property Type="Int32" Name="Score" Nullable="false" />
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Movie" Relationship="Epidaurus.Domain.Entities.MovieSeenStatus" FromRole="SeenStatus" ToRole="Movie" />
+          <NavigationProperty Name="User" Relationship="Epidaurus.Domain.Entities.UserSeenStatus" FromRole="SeenStatus" ToRole="User" />
+        </EntityType>
+        <Association Name="MovieSeenStatus">
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Epidaurus.Domain.Entities.SeenStatus" Role="SeenStatus" Multiplicity="*" >
+          </End>
+        </Association>
+        <Association Name="StorageLocationMovieSource">
+          <End Type="Epidaurus.Domain.Entities.StorageLocation" Role="StorageLocation" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Epidaurus.Domain.Entities.MovieAtStorage" Role="MovieSource" Multiplicity="*" >
+          </End>
+        </Association>
+        <Association Name="UserSeenStatus">
+          <End Type="Epidaurus.Domain.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Epidaurus.Domain.Entities.SeenStatus" Role="SeenStatus" Multiplicity="*" />
+        </Association>
+        <Association Name="MovieMovieAtStorage">
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Epidaurus.Domain.Entities.MovieAtStorage" Role="MovieAtStorage" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Movies" Relationship="Epidaurus.Domain.Entities.GenreMovie" FromRole="Genre" ToRole="Movie" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="64" />
+        </EntityType>
+        <Association Name="GenreMovie">
+          <End Type="Epidaurus.Domain.Entities.Genre" Role="Genre" Multiplicity="*" >
+          </End>
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="*" >
+          </End>
+        </Association>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="MoviesWhereWriter" Relationship="Epidaurus.Domain.Entities.MovieWriter" FromRole="Person" ToRole="Movie" />
+          <NavigationProperty Name="MoviesWhereActor" Relationship="Epidaurus.Domain.Entities.MovieActor" FromRole="Person" ToRole="Movie" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="MoviesWhereDirector" Relationship="Epidaurus.Domain.Entities.MovieDirector" FromRole="Person" ToRole="Movie" />
+        </EntityType>
+        <Association Name="MovieWriter">
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="*" />
+          <End Type="Epidaurus.Domain.Entities.Person" Role="Person" Multiplicity="*" />
+        </Association>
+        <Association Name="MovieActor">
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="*" />
+          <End Type="Epidaurus.Domain.Entities.Person" Role="Person" Multiplicity="*" />
+        </Association>
+        <Association Name="MovieDirector">
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="*" >
+          </End>
+          <End Type="Epidaurus.Domain.Entities.Person" Role="Person" Multiplicity="*" >
+          </End>
+        </Association>
+        <EntityType Name="RememberedSessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="User" Relationship="Epidaurus.Domain.Entities.UserRememberedSessions" FromRole="RememberedSessions" ToRole="User" />
+          <Property Type="String" Name="UserUsername" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="GuidHash" Nullable="false" MaxLength="64" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" />
+        </EntityType>
+        <Association Name="UserRememberedSessions">
+          <End Type="Epidaurus.Domain.Entities.User" Role="User" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Epidaurus.Domain.Entities.RememberedSessions" Role="RememberedSessions" Multiplicity="*" >
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="RememberedSessions">
+              <PropertyRef Name="UserUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ToWatch" >
+          <Key>
+            <PropertyRef Name="UserUsername" />
+            <PropertyRef Name="MovieId" />
+          </Key>
+          <NavigationProperty Name="User" Relationship="Epidaurus.Domain.Entities.UserToWatch" FromRole="ToWatch" ToRole="User" />
+          <Property Type="String" Name="UserUsername" Nullable="false" MaxLength="32" />
+          <NavigationProperty Name="Movie" Relationship="Epidaurus.Domain.Entities.ToWatchMovie" FromRole="ToWatch" ToRole="Movie" />
+          <Property Type="Int32" Name="MovieId" Nullable="false" />
+          <Property Type="String" Name="Comment" Nullable="false" MaxLength="500" />
+        </EntityType>
+        <Association Name="UserToWatch">
+          <End Type="Epidaurus.Domain.Entities.User" Role="User" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Epidaurus.Domain.Entities.ToWatch" Role="ToWatch" Multiplicity="*" >
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="ToWatch">
+              <PropertyRef Name="UserUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ToWatchMovie">
+          <End Type="Epidaurus.Domain.Entities.ToWatch" Role="ToWatch" Multiplicity="*" >
+          </End>
+          <End Type="Epidaurus.Domain.Entities.Movie" Role="Movie" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Movie">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ToWatch">
+              <PropertyRef Name="MovieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EpidaurusDbStoreContainer" CdmEntityContainer="EpidaurusDbContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Movies">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.Movie)">
+        <MappingFragment StoreEntitySet="Movies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+          <ScalarProperty Name="ImdbId" ColumnName="ImdbId" />
+          <ScalarProperty Name="Plot" ColumnName="Plot" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="ImdbQueried" ColumnName="ImdbQueried" />
+          <ScalarProperty Name="SeriesSeason" ColumnName="SeriesSeason" />
+          <ScalarProperty Name="SeriesEpisode" ColumnName="SeriesEpisode" />
+          <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+          <ScalarProperty Name="Runtime" ColumnName="Runtime" />
+          <ScalarProperty Name="AddedAt" ColumnName="AddedAt" />
+          <ScalarProperty Name="ImdbQueryFailCount" ColumnName="ImdbQueryFailCount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MovieAtStorages">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.MovieAtStorage)">
+        <MappingFragment StoreEntitySet="MovieAtStorages">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RelativePath" ColumnName="RelativePath" />
+          <ScalarProperty Name="SampleRelativePath" ColumnName="SampleRelativePath" />
+          <ScalarProperty Name="CleanedName" ColumnName="CleanedName" />
+          <ScalarProperty Name="Ignore" ColumnName="Ignore" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StorageLocations">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.StorageLocation)">
+        <MappingFragment StoreEntitySet="StorageLocations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Data1" ColumnName="Data1" />
+          <ScalarProperty Name="Data2" ColumnName="Data2" />
+          <ScalarProperty Name="Rebase" ColumnName="Rebase" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SeenStatuses">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.SeenStatus)">
+        <MappingFragment StoreEntitySet="SeenStatuses">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SeenAt" ColumnName="SeenAt" />
+          <ScalarProperty Name="Review" ColumnName="Review" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genres">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.Genre)">
+        <MappingFragment StoreEntitySet="Genres">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="People">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.Person)">
+        <MappingFragment StoreEntitySet="People">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RememberedSessions">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.RememberedSessions)">
+        <MappingFragment StoreEntitySet="RememberedSessions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserUsername" ColumnName="UserUsername" />
+          <ScalarProperty Name="GuidHash" ColumnName="GuidHash" />
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ToWatches">
+      <EntityTypeMapping TypeName="IsTypeOf(Epidaurus.Domain.Entities.ToWatch)">
+        <MappingFragment StoreEntitySet="ToWatches">
+          <ScalarProperty Name="UserUsername" ColumnName="UserUsername" />
+          <ScalarProperty Name="MovieId" ColumnName="MovieId" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="MovieSeenStatus" TypeName="Epidaurus.Domain.Entities.MovieSeenStatus" StoreEntitySet="SeenStatuses">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="Movie_Id" />
+      </EndProperty>
+      <EndProperty Name="SeenStatus">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="StorageLocationMovieSource" TypeName="Epidaurus.Domain.Entities.StorageLocationMovieSource" StoreEntitySet="MovieAtStorages">
+      <EndProperty Name="StorageLocation">
+        <ScalarProperty Name="Id" ColumnName="StorageLocation_Id" />
+      </EndProperty>
+      <EndProperty Name="MovieSource">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserSeenStatus" TypeName="Epidaurus.Domain.Entities.UserSeenStatus" StoreEntitySet="SeenStatuses">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Username" ColumnName="User_Username" />
+      </EndProperty>
+      <EndProperty Name="SeenStatus">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MovieMovieAtStorage" TypeName="Epidaurus.Domain.Entities.MovieMovieAtStorage" StoreEntitySet="MovieAtStorages">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="Movie_Id" />
+      </EndProperty>
+      <EndProperty Name="MovieAtStorage">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GenreMovie" TypeName="Epidaurus.Domain.Entities.GenreMovie" StoreEntitySet="GenreMovie">
+      <EndProperty Name="Genre">
+        <ScalarProperty Name="Id" ColumnName="Genres_Id" />
+      </EndProperty>
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="Movies_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MovieWriter" TypeName="Epidaurus.Domain.Entities.MovieWriter" StoreEntitySet="MovieWriter">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="MoviesWhereWriter_Id" />
+      </EndProperty>
+      <EndProperty Name="Person">
+        <ScalarProperty Name="Id" ColumnName="Writers_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MovieActor" TypeName="Epidaurus.Domain.Entities.MovieActor" StoreEntitySet="MovieActor">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="MoviesWhereActor_Id" />
+      </EndProperty>
+      <EndProperty Name="Person">
+        <ScalarProperty Name="Id" ColumnName="Actors_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MovieDirector" TypeName="Epidaurus.Domain.Entities.MovieDirector" StoreEntitySet="MovieDirector">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="MoviesWhereDirector_Id" />
+      </EndProperty>
+      <EndProperty Name="Person">
+        <ScalarProperty Name="Id" ColumnName="Directors_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="EpidaurusDb" >
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.User" Width="1.5" PointX="6.625" PointY="0.875" Height="2.172587890625" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Movie" Width="1.5" PointX="0.75" PointY="3.125" Height="4.8648079427083317" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.MovieAtStorage" Width="2.375" PointX="3.375" PointY="3.5" Height="2.3648893229166656" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.StorageLocation" Width="1.5" PointX="6.625" PointY="3.625" Height="2.5571907552083317" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.SeenStatus" Width="1.5" PointX="3.625" PointY="0.875" Height="2.172587890625" />
+        <AssociationConnector Association="Epidaurus.Domain.Entities.MovieSeenStatus">
+          <ConnectorPoint PointX="1.5" PointY="3.125" />
+          <ConnectorPoint PointX="1.5" PointY="1.9612939453124998" />
+          <ConnectorPoint PointX="3.625" PointY="1.9612939453124998" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.StorageLocationMovieSource">
+          <ConnectorPoint PointX="6.625" PointY="4.7449446614583328" />
+          <ConnectorPoint PointX="5.75" PointY="4.7449446614583328" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.UserSeenStatus">
+          <ConnectorPoint PointX="6.625" PointY="1.9612939453124998" />
+          <ConnectorPoint PointX="5.125" PointY="1.9612939453124998" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.MovieMovieAtStorage">
+          <ConnectorPoint PointX="2.25" PointY="4.6824446614583328" />
+          <ConnectorPoint PointX="3.375" PointY="4.6824446614583328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Genre" Width="1.5" PointX="3" PointY="6.75" Height="1.5956835937499996" />
+        <AssociationConnector Association="Epidaurus.Domain.Entities.GenreMovie">
+          <ConnectorPoint PointX="3" PointY="7.3699039713541659" />
+          <ConnectorPoint PointX="2.25" PointY="7.3699039713541659" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Person" Width="1.875" PointX="3" PointY="9.25" Height="1.9802864583333335" />
+        <AssociationConnector Association="Epidaurus.Domain.Entities.MovieWriter">
+          <ConnectorPoint PointX="1.1462948529052734" PointY="7.9898079427083317" />
+          <ConnectorPoint PointX="1.1462948529052734" PointY="10.757523016301221" />
+          <ConnectorPoint PointX="3" PointY="10.757523016301221" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.MovieActor">
+          <ConnectorPoint PointX="1.5681736029052735" PointY="7.9898079427083317" />
+          <ConnectorPoint PointX="1.5681736029052735" PointY="10.231198901717887" />
+          <ConnectorPoint PointX="3" PointY="10.231198901717887" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.MovieDirector">
+          <ConnectorPoint PointX="1.9403393014526369" PointY="7.9898079427083317" />
+          <ConnectorPoint PointX="1.9403393014526369" PointY="9.7093469508589436" />
+          <ConnectorPoint PointX="3" PointY="9.7093469508589436" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.RememberedSessions" Width="1.5" PointX="10.375" PointY="1" Height="1.9802864583333339" />
+        <AssociationConnector Association="Epidaurus.Domain.Entities.UserRememberedSessions">
+          <ConnectorPoint PointX="8.125" PointY="1.990143229166667" />
+          <ConnectorPoint PointX="10.375" PointY="1.990143229166667" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.ToWatch" Width="1.5" PointX="9.75" PointY="4.375" Height="1.9802864583333326" />
+        <AssociationConnector Association="Epidaurus.Domain.Entities.UserToWatch">
+          <ConnectorPoint PointX="8.125" PointY="3.2374886067708335" />
+          <ConnectorPoint PointX="10.03125" PointY="3.2374886067708335" />
+          <ConnectorPoint PointX="10.03125" PointY="4.375" />
+        </AssociationConnector>
+        <AssociationConnector Association="Epidaurus.Domain.Entities.ToWatchMovie">
+          <ConnectorPoint PointX="9.75" PointY="6.2999886067708317" />
+          <ConnectorPoint PointX="2.25" PointY="6.2999886067708317" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,191 @@
+﻿@model Epidaurus.ViewModels.MovieListViewModel
+@using Epidaurus.Helpers;
+@using Epidaurus.Domain.Entities;
+@using Epidaurus.ViewModels
+
+@{
+    ViewBag.Title = "Ze movies - " + Model.CurrentUser.Name;
+    ViewBag.WhoHasSeenMovie = Model.WhoHasSeenMovie;
+    ViewBag.MoviesIHaveSeen = (from el in Model.WhoHasSeenMovie where el.Value.Contains(Model.CurrentUser.Name) select el.Key).ToList();
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("Partials/SelectImdbId")
+
+<div id="filterFormContainer">
+    <h2>@Model.Movies.Count() filmer (spilletid @MH.RuntimeHelper(Model.TotalPlayTime)):</h2>
+
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "filterForm" } ))
+    {
+        <table>
+            <tr>
+                <td>
+                    Søk: <input type="text" name="Search" value="@Model.MovieFilter.Search" />
+                    Genre: @Html.DropDownList("Genre", Model.GenreList)
+                    Person: @Html.DropDownList("Person", Model.PersonList)
+                    Sorter etter: @Html.DropDownList("SortBy", Model.SortByList)
+                </td>
+                <td rowspan="2" style="vertical-align: middle;">
+                    <input type="submit" value="Oppdater" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @{
+                        var selUsers = Model.MovieFilter.SelectedUsers;
+                        var selSeen = Model.MovieFilter.SeenNotSeen == Epidaurus.ViewModels.SeenNotSeen.Seen ? "checked=\"checked\"" : "";
+                        var selNotSeen = Model.MovieFilter.SeenNotSeen == Epidaurus.ViewModels.SeenNotSeen.NotSeen ? "checked=\"checked\"" : "";
+                    }
+                    Vis kun filmer som følgende personer <input type="radio" name="SeenNotSeen" value="Seen" @selSeen/>har/<input type="radio" name="SeenNotSeen" value="NotSeen" @selNotSeen />har ikke sett:
+                    @foreach (UserViewModel user in Model.Users)
+                    {
+                        <text>
+                        <input type="checkbox" name="SelectedUsers" value="@user.Username" @if (selUsers.Any(el=>el==user.Username)) { <text>checked="true"</text> } />@user.Name
+                        </text>
+                    }
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<div id="filterFormContainerSpacing"></div>
+
+<div id="moviesContainer">
+    @foreach (var item in Model.Movies)
+    {
+        @Html.DisplayFor(m => item)
+    }
+</div>
+
+<script type="text/javascript">
+    var remove = ["Genre", "Person"];
+    function ClearAllExcept(except) {
+        for (var r in remove) {
+            if (remove[r] == except)
+                continue;
+            $("#filterForm :input[name|=\"" + remove[r] + "\"]").val("");
+        }
+    }
+
+    function SetFilter(fieldName, valuez) {
+        ClearAllExcept(fieldName);
+        var selector = "#filterForm :input[name|=\"" + fieldName + "\"]";
+        $(selector).val(valuez);
+        $("#filterForm").submit();
+        return false;
+    }
+
+    function ShowImdbIdEditBox(objIn, movieId, container) {
+//        alert("hm " + objIn + " hm : " + movieId + " hm : " + container);
+        document.editingMovieId = movieId;
+        document.editingMovieContainer = container;
+
+        var movieTitle = $("#" + container + " td.movieTitle").text();
+        if (movieTitle.length == 0) {
+            alert("did not find title");
+            return;
+        }
+
+        MovieSelectDialog(movieTitle, SetImdbId);
+    }
+
+    function SetImdbId(newImdbId) {
+        if (newImdbId.length > 6 && document.editingMovieId != null) {
+            $.ajax({
+                "url": "@Url.Action("SetMovieImdbId")" + "/" + document.editingMovieId,
+                "type": "POST",
+                "data": { "imdbId": newImdbId },
+                "success": function (data, text, blah) {
+                    $("#" + document.editingMovieContainer).replaceWith(data);
+                }
+            });
+        }
+    }
+
+    function ChangeSeenStatus(element, movieId, seen)
+    {
+        element.onclick = null;
+        $(element).unbind("click");
+        $(element).text("Wait...");
+        var ajaxUrl = "@Url.Action("ChangeSeenStatus")" + "/" + movieId;
+        $.ajax({
+            "url": ajaxUrl,
+            "type": "POST",
+            "data": { "seen" : seen },
+            "success": function (data, text, blah) {
+                if (seen)
+                    $(element).text("Film markert som sett!");
+                else
+                    $(element).text("Du har plutselig ikke sett denne filmen lenger. Magisk!");
+            }
+        });
+    }
+
+    $(function () {
+        $("#filterForm :input[name|=\"Person\"]").bind("change", function () {
+            ClearAllExcept("Person");
+            $("#filterForm").submit();
+        });
+        $("#filterForm :input[name|=\"Genre\"]").bind("change", function () {
+            ClearAllExcept("Genre");
+            $("#filterForm").submit();
+        });
+        $("#filterForm :input[name|=\"SortBy\"]").bind("change", function () { $("#filterForm").submit(); });
+
+        $("#dialogContainer form").bind("submit", function() { return false; });
+
+        $(".posterImage").hover(
+            function() { 
+                var fs = $(this).siblings(".posterFullSize");
+                var containerHeight = $(this).closest(".movieContainer").height();
+                var imgHeight = fs.height();
+                var marginTop = (containerHeight-imgHeight)/2;
+                fs.css("margin-top", marginTop);
+                fs.css("margin-left", -fs.width() - 25);
+                $(this).siblings(".posterFullSize").show('fast');
+            },
+            function() { 
+                $(this).siblings(".posterFullSize").hide('fast');
+            }
+        );
+
+        SetupSpacing();
+    });
+
+    function SetupSpacing() {
+        $("#filterFormContainerSpacing").css("height", $("#filterFormContainer").outerHeight(true));
+    }
+
+
+    $(function () {
+        $(".movieSourceClicky").bind("click", function () {
+            var movieSourceId = $(this).data("moviesourceid");
+            var thisElem = $(this);
+            if (confirm("Er du sikker på at du vil ignorere denne kilden permanent?")) {
+                var ajaxUrl = "@(Url.Action("IgnoreSource"))" + "/" + movieSourceId;
+                $.ajax({
+                    "url" : ajaxUrl,
+                    "type": "POST",
+                    "success" : function (data, text, blah) {
+                        thisElem.hide();
+                    },
+                    "error" : function() { 
+                        alert("IgnoreSource failed."); 
+                    }
+                });
+            }
+        });
+
+        $(".addToToWatch").bind("click", function() {
+            var imdbId = $(this).data("imdbId");
+            $.post("@Url.Action("AddToWatch", "ToWatch")", { imdbId : imdbId }, function(data) {
+                if (data.substring(0, 5) == "error")
+                    alert(data);
+                else
+                    alert("OK");
+            });
+        });
+    });
+</script>
+
+<h2>Slutt</h2>

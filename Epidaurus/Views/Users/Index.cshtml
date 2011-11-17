@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Epidaurus.Domain.Entities.User>
+
+@{
+    ViewBag.Title = "User listing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>Commands</th>
+        <th>
+            Name
+        </th>
+        <th>
+            LastLogin
+        </th>
+        <th>
+            IsAdmin
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Username }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Username })
+        </td>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @String.Format("{0:g}", item.LastLogin)
+        </td>
+        <td>
+            @item.IsAdmin
+        </td>
+    </tr>
+}
+
+</table>
+

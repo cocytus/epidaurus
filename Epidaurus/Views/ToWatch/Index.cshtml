@@ -1,0 +1,73 @@
+﻿@model IList<Epidaurus.ViewModels.UserWithToWatch>
+
+@{
+    ViewBag.Title = "Skal sees!";
+}
+
+<div style="padding: 0px 1em 1em 1em;">
+<h2>@ViewBag.Title</h2>
+
+<a href="#" class="addToWatch">Legg til film du vil se ...</a>
+
+@Html.Partial("Partials/SelectImdbId")
+
+@foreach (var user in Model.Where(el=>el.ToWatches.Count > 0)) { 
+    <text>
+    @{var additionalClasses = (user.User.Username == User.Identity.Name) ? "currentUserContainer" : "";}
+    <div class="userContainer @additionalClasses">
+        <h3>@user.User.Name</h3>
+        
+        @foreach(var toWatch in user.ToWatches) 
+        {
+            @Html.Partial("MovieEntry", toWatch)
+        }
+    </div>
+    </text>
+}
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".removeToWatch").click(function () {
+            var movieId = $(this).attr("data-movieId");
+            $.post("@Url.Action("RemoveToWatch")", { movieId : movieId }, function(data) { 
+                if (data === "success") {
+                    $("#tw_" + movieId).detach();
+                }
+                else
+                    alert(data);
+            }); 
+        });
+
+        $(".addToWatch").click(function() {
+            MovieSelectDialog("", function(imdbId) {
+                //alert("id selected: " + imdbId);
+                $.post("@Url.Action("AddToWatch")", { imdbId : imdbId }, function(data) {
+                    if (data.substring(0, 5) == "error")
+                        alert(data)
+                    else
+                    {
+                        $(".currentUserContainer").append(data);
+                        document.location.reload();
+                    }
+                });
+            });
+        });
+
+        $(".posterImage").hover(
+            function() { 
+                var fs = $(this).siblings(".posterFullSize");
+                var containerHeight = $(this).closest(".movieContainer").height();
+                var imgHeight = fs.height();
+                var marginTop = (containerHeight-imgHeight)/2;
+                fs.css("margin-top", marginTop);
+                fs.css("margin-left", -fs.width() - 25);
+                $(this).siblings(".posterFullSize").show('fast');
+            },
+            function() { 
+                $(this).siblings(".posterFullSize").hide('fast');
+            }
+        );
+
+    });
+</script>
