@@ -3,7 +3,6 @@ obj/
 *.suo
 *.user
 TestResults/
-packages/
 *.docstates
 
 _ReSharper.*/
