@@ -16,7 +16,7 @@ System consists of 2 main parts:
 INSTALLATION:
 
 Database:
-Only tested on SQL SERVER 2008 R2. Create an empty database,  Run the EpidaurusDb.edmx.aql script. Change the USE [epidaurus]; line to fit whatever you name your database.
+Only tested on SQL SERVER 2008 R2. Create an empty database,  Run the EpidaurusDb.edmx.sql script. Change the USE [epidaurus]; line to fit whatever you name your database.
 Create an initial admin user. Run this in SQL Server manager:
 
 	INSERT INTO Users (Username,Password, LastLogin,Name,IsAdmin)
