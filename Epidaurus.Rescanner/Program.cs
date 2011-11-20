@@ -36,20 +36,17 @@ namespace Rescanner
             }
             catch (Exception ex)
             {
-                _log.ErrorException("Error updating!", ex);
+                _log.ErrorException("Error updating: ", ex);
                 return 1;
             }
         }
 
         private static void VerifyAccessToRoots(MovieSystemService mss)
         {
-            using (var db = mss.DbEntities)
+            foreach (var path in from el in mss.DbEntities.StorageLocations where el.Active && el.Type == "Folder" select el.Data1)
             {
-                foreach (var path in from el in db.StorageLocations where el.Active && el.Type == "Folder" select el.Data1)
-                {
-                    var di = new DirectoryInfo(path);
-                    di.GetFiles();
-                }
+                var di = new DirectoryInfo(path);
+                di.GetFiles();
             }
         }
     }
