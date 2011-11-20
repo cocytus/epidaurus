@@ -56,6 +56,9 @@ namespace Epidaurus.Domain.Entities
 
         public MovieAtStorage AddStorageLocation(StorageLocation sl, string relativePath, string samplePath, string cleanedName)
         {
+            if (!MovieAtStorages.Any())
+                AddedAt = DateTime.Now;
+
             var mas = new MovieAtStorage()
             {
                 RelativePath = relativePath,
