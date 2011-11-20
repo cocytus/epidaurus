@@ -28,7 +28,8 @@ namespace Rescanner
 
                 _log.Debug("Folder scan done, updating movie data...");
 
-                sourceScanner.ScanAllStorageLocations();
+                MovieInformationUpdater updater = new MovieInformationUpdater(movieSystemService);
+                updater.Update();
 
                 _log.Debug("Rescan completed");
 
