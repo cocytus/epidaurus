@@ -237,10 +237,19 @@ namespace Epidaurus.Controllers
         [Authorize(Roles="Admin")]
         public ActionResult SetMovieImdbId(int id, string imdbId)
         {
-            var movie = _movieSystemService.SetImdbIdOnMovie(id, imdbId);
-            _movieInformationUpdater.UpdateMovieFromImdb(movie);
-            _movieSystemService.Save();
-            return View("MovieListEntry", movie);
+            try
+            {
+                imdbId = MovieInformationUpdater.CleanImdbId(imdbId);
+                var movie = _movieSystemService.SetImdbIdOnMovie(id, imdbId);
+                _movieInformationUpdater.UpdateMovieFromImdb(movie);
+                _movieSystemService.Save();
+                return View("MovieListEntry", movie);
+            }
+            catch (Exception ex)
+            {
+                _log.ErrorException(string.Format("SetMovieImdbId failed: id: {0} imdbId: {1}", id, imdbId), ex);
+                return this.Content(string.Format("<div>ERROR SetMovieImdbId failed: id: {0} imdbId: {1} <br/>Exception:<br/>{2}</div>", id, imdbId, ex.ToString()));
+            }
         }
          
         [HttpPost]
