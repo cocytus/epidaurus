@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Diagnostics;
 using Epidaurus.Domain;
 using Epidaurus.ScannerLib;
+using System.Threading;
 
 namespace Rescanner
 {
@@ -15,6 +16,33 @@ namespace Rescanner
         private static readonly NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
         static int Main(string[] args)
+        {
+            DebugStart();
+            return Run();
+        }
+
+        private static void DebugStart()
+        {
+            #if true
+            #if DEBUG
+            var start = DateTime.Now;
+            while (true)
+            {
+                Thread.Sleep(100);
+                if (DateTime.Now - start > TimeSpan.FromSeconds(5))
+                    Environment.Exit(1);
+                if (Console.KeyAvailable)
+                    break;
+            }
+
+            Console.ReadKey();
+            Console.WriteLine("push a key");
+            Console.ReadKey();
+            #endif
+            #endif
+        }
+
+        private static int Run()
         {
             var movieSystemService = new MovieSystemService();
 
