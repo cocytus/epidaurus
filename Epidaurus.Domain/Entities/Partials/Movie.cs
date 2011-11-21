@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -73,8 +75,7 @@ namespace Epidaurus.Domain.Entities
 
         public void RemoveStorageLocation(int storageLocationId)
         {
-            var mas = MovieAtStorages.FirstOrDefault(el => el.StorageLocation.Id == storageLocationId);
-            MovieAtStorages.Remove(mas);
+            MovieSystemService.RemoveStorageLocationFromMovie(Id, storageLocationId);
         }
 
         public void SetMySeenStatus(bool seen)

@@ -23,7 +23,7 @@ namespace Rescanner
 
         private static void DebugStart()
         {
-            #if true
+            #if false
             #if DEBUG
             var start = DateTime.Now;
             while (true)
@@ -56,7 +56,7 @@ namespace Rescanner
 
                 _log.Debug("Folder scan done, updating movie data...");
 
-                MovieInformationUpdater updater = new MovieInformationUpdater(movieSystemService);
+                var updater = new MovieInformationUpdater(movieSystemService);
                 updater.Update();
 
                 _log.Debug("Rescan completed");
