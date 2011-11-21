@@ -96,6 +96,8 @@ namespace Epidaurus.ScannerLib
                     _log.Info("Location {0} no longer has {1}", sl.Name, oldMovieAtStorage.CleanedName);
                 }
             }
+
+            _movieSystemService.Save();
         }
 
         private static Movie CreateMovie(MovieScanResult newMovie)
