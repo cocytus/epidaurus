@@ -13,7 +13,7 @@ namespace Epidaurus.ScannerLib.Utils
     {
         private static DateTime PreviousSearchTime;
 
-        private const string SearchUrl = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={0}+site:imdb.com&key={1}";
+        private const string SearchUrl = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={0}&key={1}";
         public static SearchResult[] Search(string searchTerm)
         {
             ThrottleSearches();
