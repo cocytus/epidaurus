@@ -20,7 +20,7 @@
         <table>
             <tr>
                 <td>
-                    Søk: <input type="text" name="Search" value="@Model.MovieFilter.Search" />
+                    Søk: <input type="text" name="Search" id="searchInputField" value="@Model.MovieFilter.Search" />
                     Genre: @Html.DropDownList("Genre", Model.GenreList)
                     Person: @Html.DropDownList("Person", Model.PersonList)
                     Sorter etter: @Html.DropDownList("SortBy", Model.SortByList)
@@ -148,6 +148,9 @@
                 $(this).siblings(".posterFullSize").hide('fast');
             }
         );
+
+        $("#searchInputField").select();
+        $("#searchInputField").focus();
 
         SetupSpacing();
     });
