@@ -46,6 +46,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TheMovieDb">
+      <HintPath>..\ExternalLibs\TheMovieDb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Imdb\ImdbApi.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceScanning\ScannerFactory.cs" />
     <Compile Include="SourceScanning\ScanResult.cs" />
+    <Compile Include="Tmdb\EpiTmdbApi.cs" />
     <Compile Include="Utils\GoogleApi.cs" />
     <Compile Include="Utils\Json.cs" />
   </ItemGroup>
