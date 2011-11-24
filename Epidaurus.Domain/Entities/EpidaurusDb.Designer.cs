@@ -46,7 +46,7 @@ namespace Epidaurus.Domain.Entities
         /// <summary>
         /// Initializes a new EpidaurusDbContainer object using the connection string found in the 'EpidaurusDbContainer' section of the application configuration file.
         /// </summary>
-        private EpidaurusDbContainer() : base("name=EpidaurusDbContainer", "EpidaurusDbContainer")
+        public EpidaurusDbContainer() : base("name=EpidaurusDbContainer", "EpidaurusDbContainer")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
@@ -55,7 +55,7 @@ namespace Epidaurus.Domain.Entities
         /// <summary>
         /// Initialize a new EpidaurusDbContainer object.
         /// </summary>
-        private EpidaurusDbContainer(string connectionString) : base(connectionString, "EpidaurusDbContainer")
+        public EpidaurusDbContainer(string connectionString) : base(connectionString, "EpidaurusDbContainer")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
@@ -64,7 +64,7 @@ namespace Epidaurus.Domain.Entities
         /// <summary>
         /// Initialize a new EpidaurusDbContainer object.
         /// </summary>
-        private EpidaurusDbContainer(EntityConnection connection) : base(connection, "EpidaurusDbContainer")
+        public EpidaurusDbContainer(EntityConnection connection) : base(connection, "EpidaurusDbContainer")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
@@ -763,6 +763,30 @@ namespace Epidaurus.Domain.Entities
         private global::System.Int32 _ImdbQueryFailCount;
         partial void OnImdbQueryFailCountChanging(global::System.Int32 value);
         partial void OnImdbQueryFailCountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> TmdbId
+        {
+            get
+            {
+                return _TmdbId;
+            }
+            set
+            {
+                OnTmdbIdChanging(value);
+                ReportPropertyChanging("TmdbId");
+                _TmdbId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TmdbId");
+                OnTmdbIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _TmdbId;
+        partial void OnTmdbIdChanging(Nullable<global::System.Int32> value);
+        partial void OnTmdbIdChanged();
 
         #endregion
     
@@ -1237,6 +1261,54 @@ namespace Epidaurus.Domain.Entities
         private global::System.String _Name;
         partial void OnNameChanging(global::System.String value);
         partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ImdbId
+        {
+            get
+            {
+                return _ImdbId;
+            }
+            set
+            {
+                OnImdbIdChanging(value);
+                ReportPropertyChanging("ImdbId");
+                _ImdbId = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ImdbId");
+                OnImdbIdChanged();
+            }
+        }
+        private global::System.String _ImdbId;
+        partial void OnImdbIdChanging(global::System.String value);
+        partial void OnImdbIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> TmdbId
+        {
+            get
+            {
+                return _TmdbId;
+            }
+            set
+            {
+                OnTmdbIdChanging(value);
+                ReportPropertyChanging("TmdbId");
+                _TmdbId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TmdbId");
+                OnTmdbIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _TmdbId;
+        partial void OnTmdbIdChanging(Nullable<global::System.Int32> value);
+        partial void OnTmdbIdChanged();
 
         #endregion
     

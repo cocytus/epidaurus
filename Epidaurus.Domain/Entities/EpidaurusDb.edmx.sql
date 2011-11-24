@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/10/2011 22:09:40
--- Generated from EDMX file: C:\Dev\Web\Epidaurus\Models\EpidaurusDb.edmx
+-- Date Created: 11/24/2011 16:01:03
+-- Generated from EDMX file: C:\Dev\Externals\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [epidaurus];
+USE [palantir];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -135,7 +135,8 @@ CREATE TABLE [dbo].[Movies] (
     [ImageUrl] nvarchar(256)  NULL,
     [Runtime] int  NULL,
     [AddedAt] datetime  NOT NULL,
-    [ImdbQueryFailCount] int  NOT NULL
+    [ImdbQueryFailCount] int  NOT NULL,
+    [TmdbId] int  NULL
 );
 GO
 
@@ -184,7 +185,9 @@ GO
 -- Creating table 'People'
 CREATE TABLE [dbo].[People] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL
+    [Name] nvarchar(max)  NOT NULL,
+    [ImdbId] nvarchar(16)  NULL,
+    [TmdbId] int  NULL
 );
 GO
 
