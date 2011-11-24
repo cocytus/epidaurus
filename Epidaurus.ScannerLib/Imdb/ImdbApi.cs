@@ -14,6 +14,7 @@ namespace Epidaurus.ScannerLib.Imdb
 {
     public static class ImdbApi
     {
+        //TODO: This should return MovieDataSourceQueryResult instead.
         public static ImdbSearchResult GetInfo(string imdbId)
         {
             string uri = string.Format("http://www.imdbapi.com/?i={0}", imdbId);

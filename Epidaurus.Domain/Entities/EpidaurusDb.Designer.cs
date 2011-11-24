@@ -787,6 +787,30 @@ namespace Epidaurus.Domain.Entities
         private Nullable<global::System.Int32> _TmdbId;
         partial void OnTmdbIdChanging(Nullable<global::System.Int32> value);
         partial void OnTmdbIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Homepage
+        {
+            get
+            {
+                return _Homepage;
+            }
+            set
+            {
+                OnHomepageChanging(value);
+                ReportPropertyChanging("Homepage");
+                _Homepage = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Homepage");
+                OnHomepageChanged();
+            }
+        }
+        private global::System.String _Homepage;
+        partial void OnHomepageChanging(global::System.String value);
+        partial void OnHomepageChanged();
 
         #endregion
     

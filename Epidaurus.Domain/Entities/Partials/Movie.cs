@@ -35,27 +35,6 @@ namespace Epidaurus.Domain.Entities
                 this.Genres.Add(MovieSystemService.GetOrCreateGenre(genre));
         }
 
-        public void SetDirectors(IEnumerable<string> directors)
-        {
-            Directors.Clear();
-            foreach (var director in directors)
-                this.Directors.Add(MovieSystemService.GetOrCreatePerson(director));
-        }
-
-        public void SetActors(IEnumerable<string> actors)
-        {
-            Actors.Clear();
-            foreach (var actor in actors)
-                this.Actors.Add(MovieSystemService.GetOrCreatePerson(actor));
-        }
-
-        public void SetWriters(IEnumerable<string> writers)
-        {
-            Writers.Clear();
-            foreach (var writer in writers)
-                this.Writers.Add(MovieSystemService.GetOrCreatePerson(writer));
-        }
-
         public MovieAtStorage AddStorageLocation(StorageLocation sl, string relativePath, string samplePath, string cleanedName)
         {
             if (!MovieAtStorages.Any())
@@ -100,6 +79,36 @@ namespace Epidaurus.Domain.Entities
                 todel.ForEach(db.DeleteObject);
             }
             MovieSystemService.Save();
+        }
+
+        public void ClearActors()
+        {
+            Actors.Clear();
+        }
+
+        public void ClearWriters()
+        {
+            Writers.Clear();
+        }
+
+        public void ClearDirectors()
+        {
+            Directors.Clear();
+        }
+
+        public void AddActor(string name, string imdbId, int tmdbId)
+        {
+            this.Actors.Add(MovieSystemService.GetOrCreatePerson(name, imdbId, tmdbId));
+        }
+
+        public void AddWriter(string name, string imdbId, int tmdbId)
+        {
+            this.Writers.Add(MovieSystemService.GetOrCreatePerson(name, imdbId, tmdbId));
+        }
+
+        public void AddDirector(string name, string imdbId, int tmdbId)
+        {
+            this.Directors.Add(MovieSystemService.GetOrCreatePerson(name, imdbId, tmdbId));
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Rescanner
                 _log.Debug("Folder scan done, updating movie data...");
 
                 var updater = new MovieInformationUpdater(movieSystemService);
-                updater.Update();
+                updater.UpdateAllMoviesInDatabase();
 
                 _log.Debug("Rescan completed");
 

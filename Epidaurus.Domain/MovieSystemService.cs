@@ -47,7 +47,7 @@ namespace Epidaurus.Domain
 
 		public IEnumerable<Movie> GetMoviesThatShouldBeUpdated()
 		{
-			return DbEntities.Movies.Where(m => !m.ImdbQueried && m.ImdbQueryFailCount < 5 && m.MovieAtStorages.Any(mas => !mas.Ignore)).ToList();
+			return DbEntities.Movies.Where(m => !m.ImdbQueried && m.ImdbQueryFailCount < 15 && m.MovieAtStorages.Any(mas => !mas.Ignore)).ToList();
 		}
 
 		public void IgnoreMovieSource(int movieAtStorageId)
@@ -110,18 +110,23 @@ namespace Epidaurus.Domain
 			return dbGenre;
 		}
 
-		public Person GetOrCreatePerson(string name)
-		{
-			var person = DbEntities.People.FirstOrDefault(el => el.Name == name);
-			if (person == null)
-			{
-				person = new Person() { Name = name };
-				DbEntities.AddToPeople(person);
-				Save();
-			}
-			return person;
-		}
-		#endregion
+        public Person GetOrCreatePerson(string name, string imdbId, int tmdbId)
+        {
+            var person = DbEntities.People.FirstOrDefault(el => el.Name == name);
+            if (person == null)
+            {
+                person = new Person() { Name = name, ImdbId = imdbId, TmdbId = tmdbId };
+                DbEntities.AddToPeople(person);
+                Save();
+            }
+
+            if (!string.IsNullOrEmpty(imdbId) && !string.IsNullOrEmpty(person.ImdbId))
+                if (imdbId != person.ImdbId)
+                    _log.Error("GetOrCreatePerson: IMDB ID Mismatch. Name: {0} Stored ID: {1} Wanted ID: {2}", person.Name, person.ImdbId, imdbId);
+
+            return person;
+        }
+        #endregion
 
 		#region Storage locations
 		public IList<StorageLocation> GetActiveStorageLocations()
@@ -205,5 +210,5 @@ namespace Epidaurus.Domain
             var mas = DbEntities.MovieAtStorages.First(el => el.Movie.Id == movieId && el.StorageLocation.Id == storageLocationId);
             DbEntities.DeleteObject(mas);
 		}
-	}
+    }
 }

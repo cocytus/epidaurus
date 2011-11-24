@@ -108,6 +108,7 @@
     <Property Name="AddedAt" Type="datetime" Nullable="false" />
     <Property Name="ImdbQueryFailCount" Type="int" Nullable="false" />
     <Property Name="TmdbId" Type="int" Nullable="true" />
+    <Property Name="Homepage" Type="nvarchar" Nullable="true" MaxLength="200" />
   </EntityType>
   <EntityType Name="MovieAtStorages">
     <Key>
@@ -499,6 +500,7 @@
           <NavigationProperty Name="ToWatches" Relationship="Epidaurus.Domain.Entities.ToWatchMovie" FromRole="Movie" ToRole="ToWatch" />
           <Property Type="Int32" Name="ImdbQueryFailCount" Nullable="false" />
           <Property Type="Int32" Name="TmdbId" Nullable="true" />
+          <Property Type="String" Name="Homepage" Nullable="true" MaxLength="200" />
         </EntityType>
         <EntityType Name="MovieAtStorage">
           <Key>
@@ -700,6 +702,7 @@
           <ScalarProperty Name="AddedAt" ColumnName="AddedAt" />
           <ScalarProperty Name="ImdbQueryFailCount" ColumnName="ImdbQueryFailCount" />
           <ScalarProperty Name="TmdbId" ColumnName="TmdbId" />
+          <ScalarProperty Name="Homepage" ColumnName="Homepage" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -858,7 +861,7 @@
     <edmx:Diagrams>
       <Diagram Name="EpidaurusDb" >
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.User" Width="1.5" PointX="6.625" PointY="0.875" Height="2.172587890625" />
-        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Movie" Width="1.5" PointX="0.75" PointY="3.125" Height="5.057109375" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Movie" Width="1.5" PointX="0.75" PointY="3.125" Height="5.2494108072916656" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.MovieAtStorage" Width="2.375" PointX="3.375" PointY="3.5" Height="2.3648893229166656" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.StorageLocation" Width="1.5" PointX="6.625" PointY="3.625" Height="2.5571907552083317" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.SeenStatus" Width="1.5" PointX="3.625" PointY="0.875" Height="2.172587890625" />
@@ -881,24 +884,24 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Genre" Width="1.5" PointX="3" PointY="6.75" Height="1.5956835937499996" />
         <AssociationConnector Association="Epidaurus.Domain.Entities.GenreMovie">
-          <ConnectorPoint PointX="3" PointY="7.4660546875" />
-          <ConnectorPoint PointX="2.25" PointY="7.4660546875" />
+          <ConnectorPoint PointX="3" PointY="7.547841796875" />
+          <ConnectorPoint PointX="2.25" PointY="7.547841796875" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Person" Width="1.875" PointX="3" PointY="9.25" Height="2.3648893229166656" />
         <AssociationConnector Association="Epidaurus.Domain.Entities.MovieWriter">
-          <ConnectorPoint PointX="1.1139888878631592" PointY="8.182109375" />
-          <ConnectorPoint PointX="1.1139888878631592" PointY="10.926996539147027" />
-          <ConnectorPoint PointX="3" PointY="10.926996539147027" />
+          <ConnectorPoint PointX="1.1351206939315797" PointY="8.3744108072916656" />
+          <ConnectorPoint PointX="1.1351206939315797" PointY="10.983144890667264" />
+          <ConnectorPoint PointX="3" PointY="10.983144890667264" />
         </AssociationConnector>
         <AssociationConnector Association="Epidaurus.Domain.Entities.MovieActor">
-          <ConnectorPoint PointX="1.5202413878631593" PointY="8.182109375" />
-          <ConnectorPoint PointX="1.5202413878631593" PointY="10.288895458417859" />
-          <ConnectorPoint PointX="3" PointY="10.288895458417859" />
+          <ConnectorPoint PointX="1.5569994439315797" PointY="8.3744108072916656" />
+          <ConnectorPoint PointX="1.5569994439315797" PointY="10.360670059938096" />
+          <ConnectorPoint PointX="3" PointY="10.360670059938096" />
         </AssociationConnector>
         <AssociationConnector Association="Epidaurus.Domain.Entities.MovieDirector">
-          <ConnectorPoint PointX="1.9163731939315798" PointY="8.182109375" />
-          <ConnectorPoint PointX="1.9163731939315798" PointY="9.7381952292089284" />
-          <ConnectorPoint PointX="3" PointY="9.7381952292089284" />
+          <ConnectorPoint PointX="1.9347522219657898" PointY="8.3744108072916656" />
+          <ConnectorPoint PointX="1.9347522219657898" PointY="9.7740825299690464" />
+          <ConnectorPoint PointX="3" PointY="9.7740825299690464" />
         </AssociationConnector>
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.RememberedSessions" Width="1.5" PointX="10.375" PointY="1" Height="1.9802864583333339" />
         <AssociationConnector Association="Epidaurus.Domain.Entities.UserRememberedSessions">

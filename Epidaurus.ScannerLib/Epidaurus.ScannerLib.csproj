@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Imdb\ImdbApi.cs" />
     <Compile Include="Imdb\ImdbSearchResult.cs" />
+    <Compile Include="MovieDataSourceQueryResult.cs" />
     <Compile Include="MovieInformationUpdater.cs" />
     <Compile Include="MovieSourceScanner.cs" />
     <Compile Include="SourceScanning\FolderScanner.cs" />

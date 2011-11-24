@@ -241,7 +241,7 @@ namespace Epidaurus.Controllers
             {
                 imdbId = MovieInformationUpdater.CleanImdbId(imdbId);
                 var movie = _movieSystemService.SetImdbIdOnMovie(id, imdbId);
-                _movieInformationUpdater.UpdateMovieFromImdb(movie);
+                _movieInformationUpdater.UpdateMovieFromDataSource(movie);
                 _movieSystemService.Save();
                 return View("MovieListEntry", movie);
             }

@@ -9,6 +9,7 @@ using System.Transactions;
 using System.Net;
 using Epidaurus.Domain;
 using Epidaurus.Domain.Entities;
+using Epidaurus.ScannerLib.Tmdb;
 
 namespace Epidaurus.ScannerLib
 {
@@ -22,14 +23,14 @@ namespace Epidaurus.ScannerLib
             _movieSystemService = movieSystemService;
         }
 
-        public void Update()
+        public void UpdateAllMoviesInDatabase()
         {
             foreach (var movie in _movieSystemService.GetMoviesThatShouldBeUpdated())
             {
                 if (string.IsNullOrEmpty(movie.ImdbId))
                     TryFindMovieIdAndUpdateMovie(movie);
                 else
-                    if (!UpdateMovieFromImdb(movie))
+                    if (!UpdateMovieFromDataSource(movie))
                     {
                         _log.Warn("UpdateMovieFromImdb returned false, not updating any more movies.");
                         break;
@@ -56,7 +57,7 @@ namespace Epidaurus.ScannerLib
             {
                 movie = Movie.Create("IMDB ID " + imdbId, imdbId);
                 _movieSystemService.AddMovie(movie);
-                UpdateMovieFromImdb(movie);
+                UpdateMovieFromDataSource(movie);
                 _movieSystemService.Save();
             }
 
@@ -71,47 +72,97 @@ namespace Epidaurus.ScannerLib
             {
                 var newMovie = _movieSystemService.SetImdbIdOnMovie(movie.Id, newImdbId);
                 if (!newMovie.ImdbQueried)
-                    UpdateMovieFromImdb(newMovie);
+                    UpdateMovieFromDataSource(newMovie);
             }
         }
 
-        public bool UpdateMovieFromImdb(Movie movie)
+        public bool UpdateMovieFromDataSource(Movie movie)
         {
             if (string.IsNullOrEmpty(movie.ImdbId))
                 throw new ArgumentNullException("No IMDB id!");
 
             try
             {
-                var imdbResult = Imdb.ImdbApi.GetInfo(movie.ImdbId);
-                if (imdbResult != null)
+                try
                 {
-                    movie.ImdbQueried = true;
-                    movie.Plot = imdbResult.Plot;
-                    movie.Title = imdbResult.Title;
-                    movie.Year = short.Parse(imdbResult.Year);
-                    if (imdbResult.Rating != "N/A")
-                        movie.Score = (int)(double.Parse(imdbResult.Rating, CultureInfo.InvariantCulture.NumberFormat) * 10.0);
-                    else
-                        movie.Score = -1;
-                    movie.ImageUrl = imdbResult.Poster;
-                    movie.Runtime = RuntimeParser(imdbResult.Runtime);
-
-                    UpdateGenresInfo(movie, imdbResult.Genre);
-                    UpdatePeopleInfo(movie, imdbResult);
-                    movie.ImdbQueryFailCount = 0;
-                    _log.Info("ImdbApi successful query {0} : {1}", movie.ImdbId, movie.Title);
+                    return UpdateMovieFromTmdb(movie);
                 }
-                else
+                catch (TmdbNotConfiguredException)
                 {
-                    _log.Error("ImdbApi FAILED query {0} : {1}", movie.ImdbId, movie.Title);
-                    movie.ImdbQueryFailCount += 1;
+                    return UpdateMovieFromImdb(movie);
                 }
             }
             catch (Exception ex)
             {
                 _log.Error("{0} update failure: {1}", movie.ImdbId, ex.ToString()); //This should not update fail count...
-                if (ex is WebException)
-                    return false;
+                return !(ex is WebException); //If webexception, return false to indicate break of loop
+            }
+        }
+
+        private bool UpdateMovieFromTmdb(Movie movie)
+        {
+            var tmdb = new EpiTmdbApi();
+            var result = tmdb.QueryMovieByImdbId(movie.ImdbId);
+            if (result != null)
+            {
+                movie.ImdbQueried = true;
+                movie.Plot = result.Plot;
+                movie.Title = result.Title;
+                movie.Year = result.Year;
+                movie.Score = result.Score;
+                movie.ImageUrl = result.Poster;
+                movie.Runtime = result.Runtime;
+                movie.Homepage = result.Homepage;
+                movie.SetGenres(result.Genres);
+
+                movie.ClearActors();
+                foreach (var actor in result.Actors)
+                    movie.AddActor(actor.Name, actor.ImdbId, actor.TmdbId);
+                movie.ClearWriters();
+                foreach (var writer in result.Writers)
+                    movie.AddWriter(writer.Name, writer.ImdbId, writer.TmdbId);
+                movie.ClearDirectors();
+                foreach (var director in result.Directors)
+                    movie.AddDirector(director.Name, director.ImdbId, director.TmdbId);
+
+                movie.ImdbQueryFailCount = 0;
+                movie.TmdbId = result.TmdbId;
+                _log.Info("TmdbApi successful query {0}({1}) : {2}", movie.TmdbId, movie.ImdbId, movie.Title);
+            }
+            else
+            {
+                _log.Error("TmdbApi FAILED query {0} : {1}", movie.ImdbId, movie.Title);
+                movie.ImdbQueryFailCount = movie.ImdbQueryFailCount <= 5 ? 10 : movie.ImdbQueryFailCount + 1;
+            }
+
+            return true;
+        }
+
+        private bool UpdateMovieFromImdb(Movie movie)
+        {
+            var imdbResult = Imdb.ImdbApi.GetInfo(movie.ImdbId);
+            if (imdbResult != null)
+            {
+                movie.ImdbQueried = true;
+                movie.Plot = imdbResult.Plot;
+                movie.Title = imdbResult.Title;
+                movie.Year = short.Parse(imdbResult.Year);
+                if (imdbResult.Rating != "N/A")
+                    movie.Score = (int) (double.Parse(imdbResult.Rating, CultureInfo.InvariantCulture.NumberFormat)*10.0);
+                else
+                    movie.Score = -1;
+                movie.ImageUrl = imdbResult.Poster;
+                movie.Runtime = RuntimeParser(imdbResult.Runtime);
+
+                UpdateGenresInfo(movie, imdbResult.Genre);
+                UpdatePeopleInfo(movie, imdbResult);
+                movie.ImdbQueryFailCount = 0;
+                _log.Info("ImdbApi successful query {0} : {1}", movie.ImdbId, movie.Title);
+            }
+            else
+            {
+                _log.Error("ImdbApi FAILED query {0} : {1}", movie.ImdbId, movie.Title);
+                movie.ImdbQueryFailCount += 1;
             }
 
             return true;
@@ -150,9 +201,10 @@ namespace Epidaurus.ScannerLib
 
         private static void UpdatePeopleInfo(Movie movie, ImdbSearchResult imdbResult)
         {
-            movie.SetDirectors(from d in imdbResult.Director.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
-            movie.SetActors(from d in imdbResult.Actors.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
-            movie.SetWriters(from d in imdbResult.Writer.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
+            throw new NotImplementedException(); //TODO: Will be removed when ImdbApi uses new MovieDataSource thingy
+            //movie.SetDirectors(from d in imdbResult.Director.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
+            //movie.SetActors(from d in imdbResult.Actors.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
+            //movie.SetWriters(from d in imdbResult.Writer.Split(',') let dt = d.Trim() where dt.Length > 0 select dt);
         }
     }
 }

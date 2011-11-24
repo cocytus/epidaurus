@@ -16,7 +16,7 @@ namespace Test.Scanner
         public void TestUpdate()
         {
             var miu = new MovieInformationUpdater(new MovieSystemService());
-            miu.Update();
+            miu.UpdateAllMoviesInDatabase();
         }
     }
 }

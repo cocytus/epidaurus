@@ -10,11 +10,11 @@ namespace Test.Scanner
     [TestClass]
     public class TestTmdbApi
     {
+        [Ignore]
         [TestMethod]
         public void Heppa()
         {
-            var hm = new EpiTmdbApi();
-
+            //var hm = new EpiTmdbApi();
         }
     }
 }

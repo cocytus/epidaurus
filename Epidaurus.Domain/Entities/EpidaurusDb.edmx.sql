@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/24/2011 16:01:03
+-- Date Created: 11/24/2011 18:48:08
 -- Generated from EDMX file: C:\Dev\Externals\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
@@ -136,7 +136,8 @@ CREATE TABLE [dbo].[Movies] (
     [Runtime] int  NULL,
     [AddedAt] datetime  NOT NULL,
     [ImdbQueryFailCount] int  NOT NULL,
-    [TmdbId] int  NULL
+    [TmdbId] int  NULL,
+    [Homepage] nvarchar(200)  NULL
 );
 GO
 
