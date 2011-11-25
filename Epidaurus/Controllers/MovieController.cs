@@ -234,6 +234,24 @@ namespace Epidaurus.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult UpdateMovie(int id)
+        {
+            try
+            {
+                var movie = _movieSystemService.GetMovieById(id);
+                _movieInformationUpdater.UpdateMovieFromDataSource(movie);
+                _movieSystemService.Save();
+                return View("MovieListEntry", movie);
+            }
+            catch (Exception ex)
+            {
+                _log.ErrorException(string.Format("UpdateMovie failed: id: {0} ", id), ex);
+                return this.Content(string.Format("<div>ERROR UpdateMovie failed: id: {0} <br/>Exception:<br/>{1}</div>", id, ex.ToString()));
+            }
+        }
+
+        [HttpPost]
         [Authorize(Roles="Admin")]
         public ActionResult SetMovieImdbId(int id, string imdbId)
         {

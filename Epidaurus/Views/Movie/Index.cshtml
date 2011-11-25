@@ -75,6 +75,22 @@
         return false;
     }
 
+    function ShowTempText(containerId, text)
+    {
+        $("#" + containerId).prepend("<div style='position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: white; opacity: 0.55; vertical-align: center; text-align: center; color: black; font-size: 24px;'>" + text + "</div>");
+    }
+
+    function UpdateMovie(objIn, movieId, container) {
+        ShowTempText(container, "Wait...");
+        $.ajax({
+            "url" : "@Url.Action("UpdateMovie")" + "/" + movieId,
+            "type" : "POST",
+            "success" : function (data) {
+                $("#" + container).replaceWith(data);
+            }
+        });
+    }
+
     function ShowImdbIdEditBox(objIn, movieId, container) {
 //        alert("hm " + objIn + " hm : " + movieId + " hm : " + container);
         document.editingMovieId = movieId;
@@ -91,6 +107,7 @@
 
     function SetImdbId(newImdbId) {
         if (newImdbId.length > 6 && document.editingMovieId != null) {
+            ShowTempText(document.editingMovieContainer, "Wait...");
             $.ajax({
                 "url": "@Url.Action("SetMovieImdbId")" + "/" + document.editingMovieId,
                 "type": "POST",

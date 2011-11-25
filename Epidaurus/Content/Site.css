@@ -87,6 +87,7 @@ textarea
     border: 1px solid lightblue;
     margin-top: 1em;
     background: #101010;
+    position: relative;
 }
 
 img 
@@ -195,6 +196,7 @@ a, a:hover, a:visited
     width: 100%;
     padding-bottom: 0.5em;
     border-bottom: 4px double #B0FFB0;
+    z-index: 100;
     //border-bottom-style:
 }
 
@@ -213,6 +215,7 @@ a, a:hover, a:visited
 {
     position: fixed;
     width: 100%;
+    z-index: 101;
 }
 
 input, select

@@ -1,5 +1,6 @@
 ﻿@model Epidaurus.Domain.Entities.Movie
 @using Epidaurus.Helpers;
+@using Epidaurus.Security
 
 @{var whoHasSeen = ViewBag.WhoHasSeenMovie as Dictionary<int,List<string>>;}
 
@@ -15,7 +16,15 @@
         }
         
         <table>
-            <tr><td> </td> <td class="movieTitle">@Model.Title</td></tr>
+            <tr>
+                <td>
+                    @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
+                    {
+                        <a href="javascript:void(0);" onclick="UpdateMovie(this, @Model.Id, 'mc_@(Model.Id)')">u</a>
+                    }
+                </td> 
+                <td class="movieTitle">@Model.Title</td>
+            </tr>
             <tr><td>År</td><td>@Model.Year</td></tr>
             <tr><td>Lengde</td><td>@if (Model.Runtime.HasValue)
                                     { @MH.RuntimeHelper(Model.Runtime.Value);
