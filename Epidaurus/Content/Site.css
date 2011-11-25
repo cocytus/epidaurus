@@ -187,6 +187,7 @@ a, a:hover, a:visited
     border: 1px solid white;
     padding: 2px;
     background-color: Black;
+    z-index: 200;
 }
 
 #filterFormContainer
