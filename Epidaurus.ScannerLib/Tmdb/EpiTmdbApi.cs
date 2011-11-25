@@ -75,7 +75,7 @@ namespace Epidaurus.ScannerLib.Tmdb
                 Year = (short)DateTime.Parse(m.Released).Year,
                 Actors = (from c in m.Cast where c.Job.ToLowerInvariant() == "actor" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
                 Directors = (from c in m.Cast where c.Job.ToLowerInvariant() == "director" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
-                Writers = (from c in m.Cast where c.Job.ToLowerInvariant() == "author" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
+                Writers = (from c in m.Cast where c.Job.ToLowerInvariant() == "author" || c.Job.ToLowerInvariant() == "novel" || c.Job.ToLowerInvariant() == "screenplay" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
                 Genres =  (from g in m.Genres select g.Name).ToArray()
             };
         }
