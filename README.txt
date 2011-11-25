@@ -15,6 +15,8 @@ System consists of 2 main parts:
 
 INSTALLATION:
 
+External prerequsites: Google API Key, TMDB API Key. If you don't have this, get them now.
+
 Database:
 Only tested on SQL SERVER 2008 R2. Create an empty database,  Run the EpidaurusDb.edmx.sql script. Change the USE [epidaurus]; line to fit whatever you name your database.
 Create an initial admin user. Run this in SQL Server manager:

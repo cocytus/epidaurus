@@ -32,7 +32,10 @@ namespace Epidaurus.ScannerLib.Tmdb
         public MovieDataSourceQueryResult QueryMovieByImdbId(string imdbId)
         {
             IList<TmdbMovie> movies;
-            try { movies = _tmdbApi.MovieSearchByImdb(imdbId).ToList(); }
+            try 
+            { 
+                movies = _tmdbApi.MovieSearchByImdb(imdbId).ToList(); 
+            }
             catch (SerializationException)
             {
                 _log.Error("QMBII: Serialization error for imdb id {0}", imdbId);
@@ -50,7 +53,8 @@ namespace Epidaurus.ScannerLib.Tmdb
                 return null;
             }
 
-            var m = movies[0];
+            //The movie does not contain cast, we need to query again with imdb id to get this.
+            var m = _tmdbApi.GetMovieInfo(movies[0].Id);
 
             if (m.Cast == null)
                 m.Cast = new List<TmdbCastPerson>();
@@ -61,6 +65,7 @@ namespace Epidaurus.ScannerLib.Tmdb
             {
                 Title = (string.IsNullOrEmpty(m.OriginalName) || m.OriginalName == m.Name) ? m.Name : string.Format("{0} ({1})", m.OriginalName, m.Name),
                 ImdbId = m.ImdbId,
+                TmdbId = m.Id,
                 Plot = m.Overview,
                 Runtime = int.Parse(m.Runtime),
                 Score = (int)(double.Parse(m.Rating, CultureInfo.InvariantCulture)*10.0),
@@ -68,9 +73,9 @@ namespace Epidaurus.ScannerLib.Tmdb
                 Poster = GetPoster(m.Posters),
                 Homepage = m.Homepage,
                 Year = (short)DateTime.Parse(m.Released).Year,
-                Actors = (from c in m.Cast where c.Job == "Actor" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
-                Directors = (from c in m.Cast where c.Job == "Director" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
-                Writers = (from c in m.Cast where c.Job == "Author" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
+                Actors = (from c in m.Cast where c.Job.ToLowerInvariant() == "actor" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
+                Directors = (from c in m.Cast where c.Job.ToLowerInvariant() == "director" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
+                Writers = (from c in m.Cast where c.Job.ToLowerInvariant() == "author" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
                 Genres =  (from g in m.Genres select g.Name).ToArray()
             };
         }
