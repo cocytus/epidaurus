@@ -46,7 +46,7 @@ namespace Epidaurus.Controllers
                 movies = movies.Where(e => e.Title.Contains(mi.Search));
 
             if (mi.Person.HasValue)
-                movies = movies.Where(e => e.Actors.Any(d => d.Id == mi.Person.Value) || e.Writers.Any(d => d.Id == mi.Person.Value) || e.Directors.Any(d => d.Id == mi.Person.Value));
+                movies = movies.Where(m => m.Casts.Any(c => c.PersonId == mi.Person.Value));
             if (mi.Genre.HasValue)
                 movies = movies.Where(e => e.Genres.Any(d => d.Id == mi.Genre.Value));
 
@@ -117,10 +117,8 @@ namespace Epidaurus.Controllers
                 return _movieSystemService.DbEntities.Movies
                     .Include("MovieAtStorages")
                     .Include("MovieAtStorages.StorageLocation")
-                    .Include("Directors")
+                    .Include("Casts.Person")
                     .Include("Genres")
-                    .Include("Writers")
-                    .Include("Actors")
                     .AsQueryable(); 
             }
         }
@@ -179,7 +177,9 @@ namespace Epidaurus.Controllers
                 if (_people == null)
                 {
                     var emptyFirstItem = new List<SelectListItem>() { new SelectListItem() { Value = "", Text = "[ALLE]" } };
-                    var dcount = from el in _movieSystemService.DbEntities.People orderby el.Name select new { Person = el, Count = el.MoviesWhereActor.Count() + el.MoviesWhereDirector.Count() + el.MoviesWhereWriter.Count() };
+                    var dcount = from el in _movieSystemService.DbEntities.People 
+                                 orderby el.Name 
+                                 select new { Person = el, Count = el.Casts.Count() };
                     _people = emptyFirstItem.Union(from el in dcount.ToList()
                                                    select new SelectListItem()
                                                    {

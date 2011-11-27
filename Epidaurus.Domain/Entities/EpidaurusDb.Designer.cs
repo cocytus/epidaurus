@@ -23,12 +23,11 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "UserSeenStatus", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.User), "SeenStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.SeenStatus))]
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "MovieMovieAtStorage", "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.Movie), "MovieAtStorage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.MovieAtStorage))]
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "GenreMovie", "Genre", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Genre), "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Movie))]
-[assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "MovieWriter", "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Movie), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Person))]
-[assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "MovieActor", "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Movie), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Person))]
-[assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "MovieDirector", "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Movie), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Person))]
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "UserRememberedSessions", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.User), "RememberedSessions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.RememberedSessions), true)]
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "UserToWatch", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.User), "ToWatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.ToWatch), true)]
 [assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "ToWatchMovie", "ToWatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.ToWatch), "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.Movie), true)]
+[assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "CastPerson", "Cast", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Cast), "Person", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.Person), true)]
+[assembly: EdmRelationshipAttribute("Epidaurus.Domain.Entities", "CastMovie", "Cast", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Epidaurus.Domain.Entities.Cast), "Movie", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(Epidaurus.Domain.Entities.Movie), true)]
 
 #endregion
 
@@ -223,6 +222,22 @@ namespace Epidaurus.Domain.Entities
             }
         }
         private ObjectSet<ToWatch> _ToWatches;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Cast> Casts
+        {
+            get
+            {
+                if ((_Casts == null))
+                {
+                    _Casts = base.CreateObjectSet<Cast>("Casts");
+                }
+                return _Casts;
+            }
+        }
+        private ObjectSet<Cast> _Casts;
 
         #endregion
         #region AddTo Methods
@@ -298,6 +313,14 @@ namespace Epidaurus.Domain.Entities
         {
             base.AddObject("ToWatches", toWatch);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Casts EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToCasts(Cast cast)
+        {
+            base.AddObject("Casts", cast);
+        }
 
         #endregion
     }
@@ -306,6 +329,242 @@ namespace Epidaurus.Domain.Entities
     #endregion
     
     #region Entities
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Epidaurus.Domain.Entities", Name="Cast")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Cast : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Cast object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="role">Initial value of the Role property.</param>
+        /// <param name="personId">Initial value of the PersonId property.</param>
+        /// <param name="movieId">Initial value of the MovieId property.</param>
+        public static Cast CreateCast(global::System.Int32 id, global::System.String role, global::System.Int32 personId, global::System.Int32 movieId)
+        {
+            Cast cast = new Cast();
+            cast.Id = id;
+            cast.Role = role;
+            cast.PersonId = personId;
+            cast.MovieId = movieId;
+            return cast;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 SortOrder
+        {
+            get
+            {
+                return _SortOrder;
+            }
+            set
+            {
+                OnSortOrderChanging(value);
+                ReportPropertyChanging("SortOrder");
+                _SortOrder = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("SortOrder");
+                OnSortOrderChanged();
+            }
+        }
+        private global::System.Int32 _SortOrder = 0;
+        partial void OnSortOrderChanging(global::System.Int32 value);
+        partial void OnSortOrderChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Role
+        {
+            get
+            {
+                return _Role;
+            }
+            set
+            {
+                OnRoleChanging(value);
+                ReportPropertyChanging("Role");
+                _Role = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Role");
+                OnRoleChanged();
+            }
+        }
+        private global::System.String _Role;
+        partial void OnRoleChanging(global::System.String value);
+        partial void OnRoleChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PersonId
+        {
+            get
+            {
+                return _PersonId;
+            }
+            set
+            {
+                OnPersonIdChanging(value);
+                ReportPropertyChanging("PersonId");
+                _PersonId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PersonId");
+                OnPersonIdChanged();
+            }
+        }
+        private global::System.Int32 _PersonId;
+        partial void OnPersonIdChanging(global::System.Int32 value);
+        partial void OnPersonIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MovieId
+        {
+            get
+            {
+                return _MovieId;
+            }
+            set
+            {
+                OnMovieIdChanging(value);
+                ReportPropertyChanging("MovieId");
+                _MovieId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MovieId");
+                OnMovieIdChanged();
+            }
+        }
+        private global::System.Int32 _MovieId;
+        partial void OnMovieIdChanging(global::System.Int32 value);
+        partial void OnMovieIdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "CastPerson", "Person")]
+        public Person Person
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Epidaurus.Domain.Entities.CastPerson", "Person").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Epidaurus.Domain.Entities.CastPerson", "Person").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Person> PersonReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Person>("Epidaurus.Domain.Entities.CastPerson", "Person");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Person>("Epidaurus.Domain.Entities.CastPerson", "Person", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "CastMovie", "Movie")]
+        public Movie Movie
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movie>("Epidaurus.Domain.Entities.CastMovie", "Movie").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movie>("Epidaurus.Domain.Entities.CastMovie", "Movie").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Movie> MovieReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movie>("Epidaurus.Domain.Entities.CastMovie", "Movie");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Movie>("Epidaurus.Domain.Entities.CastMovie", "Movie", value);
+                }
+            }
+        }
+
+        #endregion
+    }
     
     /// <summary>
     /// No Metadata Documentation available.
@@ -888,72 +1147,6 @@ namespace Epidaurus.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieWriter", "Person")]
-        public EntityCollection<Person> Writers
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieWriter", "Person");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieWriter", "Person", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieActor", "Person")]
-        public EntityCollection<Person> Actors
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieActor", "Person");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieActor", "Person", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieDirector", "Person")]
-        public EntityCollection<Person> Directors
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieDirector", "Person");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Person>("Epidaurus.Domain.Entities.MovieDirector", "Person", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "ToWatchMovie", "ToWatch")]
         public EntityCollection<ToWatch> ToWatches
         {
@@ -966,6 +1159,28 @@ namespace Epidaurus.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ToWatch>("Epidaurus.Domain.Entities.ToWatchMovie", "ToWatch", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "CastMovie", "Cast")]
+        public EntityCollection<Cast> Casts
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Cast>("Epidaurus.Domain.Entities.CastMovie", "Cast");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Cast>("Epidaurus.Domain.Entities.CastMovie", "Cast", value);
                 }
             }
         }
@@ -1344,62 +1559,18 @@ namespace Epidaurus.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieWriter", "Movie")]
-        public EntityCollection<Movie> MoviesWhereWriter
+        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "CastPerson", "Cast")]
+        public EntityCollection<Cast> Casts
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieWriter", "Movie");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Cast>("Epidaurus.Domain.Entities.CastPerson", "Cast");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieWriter", "Movie", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieActor", "Movie")]
-        public EntityCollection<Movie> MoviesWhereActor
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieActor", "Movie");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieActor", "Movie", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("Epidaurus.Domain.Entities", "MovieDirector", "Movie")]
-        public EntityCollection<Movie> MoviesWhereDirector
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieDirector", "Movie");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movie>("Epidaurus.Domain.Entities.MovieDirector", "Movie", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Cast>("Epidaurus.Domain.Entities.CastPerson", "Cast", value);
                 }
             }
         }

@@ -115,15 +115,9 @@ namespace Epidaurus.ScannerLib
                 movie.Homepage = result.Homepage;
                 movie.SetGenres(result.Genres);
 
-                movie.ClearActors();
-                foreach (var actor in result.Actors)
-                    movie.AddActor(actor.Name, actor.ImdbId, actor.TmdbId);
-                movie.ClearWriters();
-                foreach (var writer in result.Writers)
-                    movie.AddWriter(writer.Name, writer.ImdbId, writer.TmdbId);
-                movie.ClearDirectors();
-                foreach (var director in result.Directors)
-                    movie.AddDirector(director.Name, director.ImdbId, director.TmdbId);
+                movie.Casts.Clear();
+                foreach (var cast in result.Casts)
+                    movie.AddCastMember(cast.Role, cast.Name, cast.ImdbId, cast.TmdbId, cast.SortOrder);
 
                 movie.ImdbQueryFailCount = 0;
                 movie.TmdbId = result.TmdbId;

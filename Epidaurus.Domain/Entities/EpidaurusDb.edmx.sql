@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/24/2011 18:48:08
--- Generated from EDMX file: C:\Dev\Externals\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
+-- Date Created: 11/27/2011 21:11:17
+-- Generated from EDMX file: C:\Dev\Web\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -35,24 +35,6 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_GenreMovie_Movie]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GenreMovie] DROP CONSTRAINT [FK_GenreMovie_Movie];
 GO
-IF OBJECT_ID(N'[dbo].[FK_MovieWriter_Movie]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieWriter] DROP CONSTRAINT [FK_MovieWriter_Movie];
-GO
-IF OBJECT_ID(N'[dbo].[FK_MovieWriter_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieWriter] DROP CONSTRAINT [FK_MovieWriter_Person];
-GO
-IF OBJECT_ID(N'[dbo].[FK_MovieActor_Movie]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieActor] DROP CONSTRAINT [FK_MovieActor_Movie];
-GO
-IF OBJECT_ID(N'[dbo].[FK_MovieActor_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieActor] DROP CONSTRAINT [FK_MovieActor_Person];
-GO
-IF OBJECT_ID(N'[dbo].[FK_MovieDirector_Movie]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieDirector] DROP CONSTRAINT [FK_MovieDirector_Movie];
-GO
-IF OBJECT_ID(N'[dbo].[FK_MovieDirector_Person]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[MovieDirector] DROP CONSTRAINT [FK_MovieDirector_Person];
-GO
 IF OBJECT_ID(N'[dbo].[FK_UserRememberedSessions]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RememberedSessions] DROP CONSTRAINT [FK_UserRememberedSessions];
 GO
@@ -61,6 +43,12 @@ IF OBJECT_ID(N'[dbo].[FK_UserToWatch]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_ToWatchMovie]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[ToWatches] DROP CONSTRAINT [FK_ToWatchMovie];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CastPerson]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Casts] DROP CONSTRAINT [FK_CastPerson];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CastMovie]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Casts] DROP CONSTRAINT [FK_CastMovie];
 GO
 
 -- --------------------------------------------------
@@ -94,17 +82,11 @@ GO
 IF OBJECT_ID(N'[dbo].[ToWatches]', 'U') IS NOT NULL
     DROP TABLE [dbo].[ToWatches];
 GO
+IF OBJECT_ID(N'[dbo].[Casts]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Casts];
+GO
 IF OBJECT_ID(N'[dbo].[GenreMovie]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GenreMovie];
-GO
-IF OBJECT_ID(N'[dbo].[MovieWriter]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[MovieWriter];
-GO
-IF OBJECT_ID(N'[dbo].[MovieActor]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[MovieActor];
-GO
-IF OBJECT_ID(N'[dbo].[MovieDirector]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[MovieDirector];
 GO
 
 -- --------------------------------------------------
@@ -209,31 +191,20 @@ CREATE TABLE [dbo].[ToWatches] (
 );
 GO
 
+-- Creating table 'Casts'
+CREATE TABLE [dbo].[Casts] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [SortOrder] int  NOT NULL,
+    [Role] nvarchar(16)  NOT NULL,
+    [PersonId] int  NOT NULL,
+    [MovieId] int  NOT NULL
+);
+GO
+
 -- Creating table 'GenreMovie'
 CREATE TABLE [dbo].[GenreMovie] (
     [Genres_Id] int  NOT NULL,
     [Movies_Id] int  NOT NULL
-);
-GO
-
--- Creating table 'MovieWriter'
-CREATE TABLE [dbo].[MovieWriter] (
-    [MoviesWhereWriter_Id] int  NOT NULL,
-    [Writers_Id] int  NOT NULL
-);
-GO
-
--- Creating table 'MovieActor'
-CREATE TABLE [dbo].[MovieActor] (
-    [MoviesWhereActor_Id] int  NOT NULL,
-    [Actors_Id] int  NOT NULL
-);
-GO
-
--- Creating table 'MovieDirector'
-CREATE TABLE [dbo].[MovieDirector] (
-    [MoviesWhereDirector_Id] int  NOT NULL,
-    [Directors_Id] int  NOT NULL
 );
 GO
 
@@ -295,28 +266,16 @@ ADD CONSTRAINT [PK_ToWatches]
     PRIMARY KEY CLUSTERED ([UserUsername], [MovieId] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'Casts'
+ALTER TABLE [dbo].[Casts]
+ADD CONSTRAINT [PK_Casts]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Genres_Id], [Movies_Id] in table 'GenreMovie'
 ALTER TABLE [dbo].[GenreMovie]
 ADD CONSTRAINT [PK_GenreMovie]
     PRIMARY KEY NONCLUSTERED ([Genres_Id], [Movies_Id] ASC);
-GO
-
--- Creating primary key on [MoviesWhereWriter_Id], [Writers_Id] in table 'MovieWriter'
-ALTER TABLE [dbo].[MovieWriter]
-ADD CONSTRAINT [PK_MovieWriter]
-    PRIMARY KEY NONCLUSTERED ([MoviesWhereWriter_Id], [Writers_Id] ASC);
-GO
-
--- Creating primary key on [MoviesWhereActor_Id], [Actors_Id] in table 'MovieActor'
-ALTER TABLE [dbo].[MovieActor]
-ADD CONSTRAINT [PK_MovieActor]
-    PRIMARY KEY NONCLUSTERED ([MoviesWhereActor_Id], [Actors_Id] ASC);
-GO
-
--- Creating primary key on [MoviesWhereDirector_Id], [Directors_Id] in table 'MovieDirector'
-ALTER TABLE [dbo].[MovieDirector]
-ADD CONSTRAINT [PK_MovieDirector]
-    PRIMARY KEY NONCLUSTERED ([MoviesWhereDirector_Id], [Directors_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -402,75 +361,6 @@ ON [dbo].[GenreMovie]
     ([Movies_Id]);
 GO
 
--- Creating foreign key on [MoviesWhereWriter_Id] in table 'MovieWriter'
-ALTER TABLE [dbo].[MovieWriter]
-ADD CONSTRAINT [FK_MovieWriter_Movie]
-    FOREIGN KEY ([MoviesWhereWriter_Id])
-    REFERENCES [dbo].[Movies]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Writers_Id] in table 'MovieWriter'
-ALTER TABLE [dbo].[MovieWriter]
-ADD CONSTRAINT [FK_MovieWriter_Person]
-    FOREIGN KEY ([Writers_Id])
-    REFERENCES [dbo].[People]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_MovieWriter_Person'
-CREATE INDEX [IX_FK_MovieWriter_Person]
-ON [dbo].[MovieWriter]
-    ([Writers_Id]);
-GO
-
--- Creating foreign key on [MoviesWhereActor_Id] in table 'MovieActor'
-ALTER TABLE [dbo].[MovieActor]
-ADD CONSTRAINT [FK_MovieActor_Movie]
-    FOREIGN KEY ([MoviesWhereActor_Id])
-    REFERENCES [dbo].[Movies]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Actors_Id] in table 'MovieActor'
-ALTER TABLE [dbo].[MovieActor]
-ADD CONSTRAINT [FK_MovieActor_Person]
-    FOREIGN KEY ([Actors_Id])
-    REFERENCES [dbo].[People]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_MovieActor_Person'
-CREATE INDEX [IX_FK_MovieActor_Person]
-ON [dbo].[MovieActor]
-    ([Actors_Id]);
-GO
-
--- Creating foreign key on [MoviesWhereDirector_Id] in table 'MovieDirector'
-ALTER TABLE [dbo].[MovieDirector]
-ADD CONSTRAINT [FK_MovieDirector_Movie]
-    FOREIGN KEY ([MoviesWhereDirector_Id])
-    REFERENCES [dbo].[Movies]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Directors_Id] in table 'MovieDirector'
-ALTER TABLE [dbo].[MovieDirector]
-ADD CONSTRAINT [FK_MovieDirector_Person]
-    FOREIGN KEY ([Directors_Id])
-    REFERENCES [dbo].[People]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_MovieDirector_Person'
-CREATE INDEX [IX_FK_MovieDirector_Person]
-ON [dbo].[MovieDirector]
-    ([Directors_Id]);
-GO
-
 -- Creating foreign key on [UserUsername] in table 'RememberedSessions'
 ALTER TABLE [dbo].[RememberedSessions]
 ADD CONSTRAINT [FK_UserRememberedSessions]
@@ -505,6 +395,34 @@ ADD CONSTRAINT [FK_ToWatchMovie]
 -- Creating non-clustered index for FOREIGN KEY 'FK_ToWatchMovie'
 CREATE INDEX [IX_FK_ToWatchMovie]
 ON [dbo].[ToWatches]
+    ([MovieId]);
+GO
+
+-- Creating foreign key on [PersonId] in table 'Casts'
+ALTER TABLE [dbo].[Casts]
+ADD CONSTRAINT [FK_CastPerson]
+    FOREIGN KEY ([PersonId])
+    REFERENCES [dbo].[People]
+        ([Id])
+    ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CastPerson'
+CREATE INDEX [IX_FK_CastPerson]
+ON [dbo].[Casts]
+    ([PersonId]);
+GO
+
+-- Creating foreign key on [MovieId] in table 'Casts'
+ALTER TABLE [dbo].[Casts]
+ADD CONSTRAINT [FK_CastMovie]
+    FOREIGN KEY ([MovieId])
+    REFERENCES [dbo].[Movies]
+        ([Id])
+    ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CastMovie'
+CREATE INDEX [IX_FK_CastMovie]
+ON [dbo].[Casts]
     ([MovieId]);
 GO
 

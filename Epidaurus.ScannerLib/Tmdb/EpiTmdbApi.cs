@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using TheMovieDb;
+using Epidaurus.Domain.Entities;
 
 namespace Epidaurus.ScannerLib.Tmdb
 {
@@ -73,13 +74,27 @@ namespace Epidaurus.ScannerLib.Tmdb
                 Poster = GetPoster(m.Posters),
                 Homepage = m.Homepage,
                 Year = (short)DateTime.Parse(m.Released).Year,
-                Actors = (from c in m.Cast where c.Job.ToLowerInvariant() == "actor" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
-                Directors = (from c in m.Cast where c.Job.ToLowerInvariant() == "director" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
-                Writers = (from c in m.Cast where c.Job.ToLowerInvariant() == "author" || c.Job.ToLowerInvariant() == "novel" || c.Job.ToLowerInvariant() == "screenplay" select new MovieDataSourcePersonData(c.Name, null, c.Id)).ToArray(),
+                Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).ToArray(),
                 Genres =  (from g in m.Genres select g.Name).ToArray()
             };
         }
 
+        private static MovieDataSourcePersonData? CreateCast(TmdbCastPerson c)
+        {
+            var jobMap = new [] 
+            { 
+                new { r = Cast.Roles.Actor, jobs = new string[] { "actor" } },
+                new { r = Cast.Roles.Director , jobs = new string[] { "director" } },
+                new { r = Cast.Roles.Writer, jobs = new string[] { "author", "novel", "screenplay" } } 
+            };
+
+            var role = (from j in jobMap where j.jobs.Contains(c.Job.ToLowerInvariant()) select j.r).FirstOrDefault();
+            if (role == default(Cast.Roles))
+                return null;
+
+            return new MovieDataSourcePersonData(c.Name, null, c.Id, c.Order, role);
+        }
+      
         private string GetPoster(IList<TmdbImage> posters)
         {
             var img =

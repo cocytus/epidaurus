@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Entities\EpidaurusDbContainer.cs" />
     <Compile Include="Entities\IEntityWithMovieSystemServiceKnowledge.cs" />
+    <Compile Include="Entities\Partials\Cast.cs" />
     <Compile Include="Entities\Partials\Movie.cs" />
     <Compile Include="Entities\Partials\StorageLocation.cs" />
     <Compile Include="Entities\Partials\User.cs" />
