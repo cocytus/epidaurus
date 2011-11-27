@@ -53,7 +53,7 @@
                 <td>
                     @foreach (var director in @Model.Directors)
                     { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Name</a>  
+                        <a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Person.Name</a>  
                     }
                 </td>
             </tr>
@@ -62,16 +62,18 @@
                 <td>
                     @foreach (var writer in @Model.Writers)
                     { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Name</a>  
+                        <a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Person.Name</a>  
                     }
                 </td>
             </tr>
             <tr>
                 <td>Skuespillere</td>
                 <td>
-                    @foreach (var actor in @Model.Actors)
+                    @foreach (var actor in @Model.Actors.Take(10))
                     { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);">@actor.Name</a>  
+                        <a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);"
+                        @if (@actor.RoleName != null) { <text>title='As @actor.RoleName'</text> }
+                        >@actor.Person.Name</a>  
                     }
                 </td>
             </tr>

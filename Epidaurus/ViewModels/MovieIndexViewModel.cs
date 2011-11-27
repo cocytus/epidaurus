@@ -73,7 +73,7 @@ namespace Epidaurus.ViewModels
             _movie = movie;
         }
 
-        public IList<Person> Directors
+        public IList<Cast> Directors
         {
             get
             {
@@ -81,7 +81,7 @@ namespace Epidaurus.ViewModels
             }
         }
 
-        public IList<Person> Writers
+        public IList<Cast> Writers
         {
             get
             {
@@ -89,7 +89,7 @@ namespace Epidaurus.ViewModels
             }
         }
 
-        public IList<Person> Actors
+        public IList<Cast> Actors
         {
             get
             {
@@ -97,12 +97,12 @@ namespace Epidaurus.ViewModels
             }
         }
 
-        private IList<Person> GetSortedJob(Cast.Jobs job)
+        private IList<Cast> GetSortedJob(Cast.Jobs job)
         {
             if (!_movie.Casts.IsLoaded)
                 _movie.Casts.Load();
             var jobStr = job.ToString();
-            return (from c in _movie.Casts where c.Job == jobStr orderby c.SortOrder select c.Person).ToList();
+            return (from c in _movie.Casts where c.Job == jobStr orderby c.SortOrder select c).ToList();
         }
     }
 }
