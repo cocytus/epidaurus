@@ -115,7 +115,7 @@ namespace Epidaurus.ScannerLib
                 movie.Homepage = result.Homepage;
                 movie.SetGenres(result.Genres);
 
-                movie.Casts.Clear();
+                movie.Casts.ToList().ForEach(_movieSystemService.DbEntities.DeleteObject);
                 foreach (var cast in result.Casts)
                     movie.AddCastMember(cast.Job, cast.Name, cast.ImdbId, cast.TmdbId, cast.SortOrder, cast.RoleName);
 

@@ -94,6 +94,7 @@ namespace Epidaurus.Domain.Entities
                 throw new InvalidOperationException("Can not add cast to new movie");
             var person = MovieSystemService.GetOrCreatePerson(name, imdbId, tmdbId);
             var cast = Cast.CreateCast(0, job.ToString(), person.Id, Id);
+            cast.SortOrder = sortOrder;
             cast.RoleName = !string.IsNullOrWhiteSpace(roleName) ? roleName : null;
             MovieSystemService.DbEntities.AddToCasts(cast);
         }
