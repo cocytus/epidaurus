@@ -112,7 +112,7 @@ namespace Epidaurus.ScannerLib
                 movie.Score = result.Score;
                 movie.ImageUrl = result.Poster;
                 movie.Runtime = result.Runtime;
-                movie.Homepage = result.Homepage;
+                movie.Homepage = !string.IsNullOrWhiteSpace(result.Homepage) ? result.Homepage : null;
                 movie.SetGenres(result.Genres);
 
                 movie.Casts.ToList().ForEach(_movieSystemService.DbEntities.DeleteObject);

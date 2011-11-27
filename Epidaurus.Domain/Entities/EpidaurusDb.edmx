@@ -583,7 +583,7 @@
           <Property Type="Int32" Name="PersonId" Nullable="false" />
           <NavigationProperty Name="Movie" Relationship="Epidaurus.Domain.Entities.CastMovie" FromRole="Cast" ToRole="Movie" />
           <Property Type="Int32" Name="MovieId" Nullable="false" />
-          <Property Type="String" Name="RoleName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="RoleName" Nullable="true" MaxLength="200" />
         </EntityType>
         <Association Name="CastPerson">
           <End Type="Epidaurus.Domain.Entities.Cast" Role="Cast" Multiplicity="*" />
