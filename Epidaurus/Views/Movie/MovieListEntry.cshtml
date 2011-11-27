@@ -2,4 +2,4 @@
 @{
     this.Layout = null;
 }
-@Html.DisplayFor(m => Model)
+@Html.Partial("Partials/Movie", new Epidaurus.ViewModels.MovieViewModel(Model))

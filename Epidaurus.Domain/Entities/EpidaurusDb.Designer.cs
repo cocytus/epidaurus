@@ -344,14 +344,14 @@ namespace Epidaurus.Domain.Entities
         /// Create a new Cast object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="role">Initial value of the Role property.</param>
+        /// <param name="job">Initial value of the Job property.</param>
         /// <param name="personId">Initial value of the PersonId property.</param>
         /// <param name="movieId">Initial value of the MovieId property.</param>
-        public static Cast CreateCast(global::System.Int32 id, global::System.String role, global::System.Int32 personId, global::System.Int32 movieId)
+        public static Cast CreateCast(global::System.Int32 id, global::System.String job, global::System.Int32 personId, global::System.Int32 movieId)
         {
             Cast cast = new Cast();
             cast.Id = id;
-            cast.Role = role;
+            cast.Job = job;
             cast.PersonId = personId;
             cast.MovieId = movieId;
             return cast;
@@ -416,24 +416,24 @@ namespace Epidaurus.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String Role
+        public global::System.String Job
         {
             get
             {
-                return _Role;
+                return _Job;
             }
             set
             {
-                OnRoleChanging(value);
-                ReportPropertyChanging("Role");
-                _Role = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Role");
-                OnRoleChanged();
+                OnJobChanging(value);
+                ReportPropertyChanging("Job");
+                _Job = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Job");
+                OnJobChanged();
             }
         }
-        private global::System.String _Role;
-        partial void OnRoleChanging(global::System.String value);
-        partial void OnRoleChanged();
+        private global::System.String _Job;
+        partial void OnJobChanging(global::System.String value);
+        partial void OnJobChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -482,6 +482,30 @@ namespace Epidaurus.Domain.Entities
         private global::System.Int32 _MovieId;
         partial void OnMovieIdChanging(global::System.Int32 value);
         partial void OnMovieIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RoleName
+        {
+            get
+            {
+                return _RoleName;
+            }
+            set
+            {
+                OnRoleNameChanging(value);
+                ReportPropertyChanging("RoleName");
+                _RoleName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RoleName");
+                OnRoleNameChanged();
+            }
+        }
+        private global::System.String _RoleName;
+        partial void OnRoleNameChanging(global::System.String value);
+        partial void OnRoleNameChanged();
 
         #endregion
     

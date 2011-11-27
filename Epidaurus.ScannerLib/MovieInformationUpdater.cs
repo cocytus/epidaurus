@@ -117,7 +117,7 @@ namespace Epidaurus.ScannerLib
 
                 movie.Casts.Clear();
                 foreach (var cast in result.Casts)
-                    movie.AddCastMember(cast.Role, cast.Name, cast.ImdbId, cast.TmdbId, cast.SortOrder);
+                    movie.AddCastMember(cast.Job, cast.Name, cast.ImdbId, cast.TmdbId, cast.SortOrder, cast.RoleName);
 
                 movie.ImdbQueryFailCount = 0;
                 movie.TmdbId = result.TmdbId;

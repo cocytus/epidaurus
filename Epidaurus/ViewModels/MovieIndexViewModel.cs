@@ -50,7 +50,6 @@ namespace Epidaurus.ViewModels
 
     public class MovieFilterViewModel
     {
-
         public MovieFilterViewModel()
         {
             SelectedUsers = new string[0];
@@ -62,5 +61,48 @@ namespace Epidaurus.ViewModels
         public int? Genre { get; set; }
         public string[] SelectedUsers { get; set; }
         public SeenNotSeen SeenNotSeen { get; set; }
+    }
+
+    public class MovieViewModel
+    {
+        private readonly Movie _movie;
+        public Movie Movie { get { return _movie; } }
+
+        public MovieViewModel(Movie movie)
+        {
+            _movie = movie;
+        }
+
+        public IList<Person> Directors
+        {
+            get
+            {
+                return GetSortedJob(Cast.Jobs.Director);
+            }
+        }
+
+        public IList<Person> Writers
+        {
+            get
+            {
+                return GetSortedJob(Cast.Jobs.Writer);
+            }
+        }
+
+        public IList<Person> Actors
+        {
+            get
+            {
+                return GetSortedJob(Cast.Jobs.Actor);
+            }
+        }
+
+        private IList<Person> GetSortedJob(Cast.Jobs job)
+        {
+            if (!_movie.Casts.IsLoaded)
+                _movie.Casts.Load();
+            var jobStr = job.ToString();
+            return (from c in _movie.Casts where c.Job == jobStr orderby c.SortOrder select c.Person).ToList();
+        }
     }
 }

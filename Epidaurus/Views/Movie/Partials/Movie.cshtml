@@ -1,17 +1,20 @@
-﻿@model Epidaurus.Domain.Entities.Movie
+﻿@model Epidaurus.ViewModels.MovieViewModel
 @using Epidaurus.Helpers;
 @using Epidaurus.Security
 
-@{var whoHasSeen = ViewBag.WhoHasSeenMovie as Dictionary<int,List<string>>;}
+@{
+    var whoHasSeen = ViewBag.WhoHasSeenMovie as Dictionary<int,List<string>>;
+    var movie = Model.Movie;
+}
 
-    <div class="movieContainer" id="mc_@(Model.Id)">
-        @if (Model.ImageUrl != null)
+    <div class="movieContainer" id="mc_@(movie.Id)">
+        @if (movie.ImageUrl != null)
         { 
             <div style="float: right">
                 <div class="posterFullSize">
-                    <img src="@Url.Action("Poster", new { id = @Model.ImdbId })" alt="Poster"/>
+                    <img src="@Url.Action("Poster", new { id = @movie.ImdbId })" alt="Poster"/>
                 </div>
-                <img class="posterImage" src="@Url.Action("Poster", new { id = @Model.ImdbId })" width="200" alt="Poster" /> 
+                <img class="posterImage" src="@Url.Action("Poster", new { id = @movie.ImdbId })" width="200" alt="Poster" /> 
             </div>
         }
         
@@ -20,26 +23,26 @@
                 <td>
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
                     {
-                        <a href="javascript:void(0);" onclick="UpdateMovie(this, @Model.Id, 'mc_@(Model.Id)')">u</a>
+                        <a href="javascript:void(0);" onclick="UpdateMovie(this, @movie.Id, 'mc_@(movie.Id)')">u</a>
                     }
                 </td> 
-                <td class="movieTitle">@Model.Title</td>
+                <td class="movieTitle">@movie.Title</td>
             </tr>
-            <tr><td>År</td><td>@Model.Year</td></tr>
-            <tr><td>Lengde</td><td>@if (Model.Runtime.HasValue)
-                                    { @MH.RuntimeHelper(Model.Runtime.Value);
+            <tr><td>År</td><td>@movie.Year</td></tr>
+            <tr><td>Lengde</td><td>@if (movie.Runtime.HasValue)
+                                    { @MH.RuntimeHelper(movie.Runtime.Value);
                                     }</td></tr>
-            <tr><td>IMDB Score</td><td>@MH.ScoreHelper(Model.Score)</td></tr>
+            <tr><td>IMDB Score</td><td>@MH.ScoreHelper(movie.Score)</td></tr>
             <tr><td>Imdb </td>
                 <td>
-                    <a href="http://www.imdb.com/title/@Model.ImdbId">@Model.ImdbId</a>
-                    <span class="changeImdbDiv" onclick="ShowImdbIdEditBox(this, @Model.Id, 'mc_@(Model.Id)')">(Endre)</span>
+                    <a href="http://www.imdb.com/title/@movie.ImdbId">@movie.ImdbId</a>
+                    <span class="changeImdbDiv" onclick="ShowImdbIdEditBox(this, @movie.Id, 'mc_@(movie.Id)')">(Endre)</span>
                 </td>
             </tr>
             <tr>
                 <td>Genre</td>
                 <td>
-                    @foreach (var genre in @Model.Genres)
+                    @foreach (var genre in @movie.Genres)
                     { 
                         <a href="javascript:null();" onclick="SetFilter('Genre',@genre.Id);">@genre.Name</a>  
                     }
@@ -75,14 +78,14 @@
             <tr>
                 <td>Lokal lokasjon</td>
                 <td>
-                    @foreach (var movieSource in @Model.MovieAtStorages)
+                    @foreach (var movieSource in @movie.MovieAtStorages)
                     { 
                         <span>@movieSource.CleanedName <span class="movieSourceClicky clickable" data-moviesourceid="@movieSource.Id">@@</span> @movieSource.StorageLocation.Name, </span>
                     }
                 </td>
             </tr>
-            <tr><td>Plot</td><td>@Model.Plot</td></tr>
-            <tr><td>Lagt til</td><td>@Model.AddedAt.ToShortDateString()</td></tr>
+            <tr><td>Plot</td><td>@movie.Plot</td></tr>
+            <tr><td>Lagt til</td><td>@movie.AddedAt.ToShortDateString()</td></tr>
 
             <tr>
                 @if (HttpContext.Current.User.Identity.IsAuthenticated)
@@ -91,13 +94,13 @@
                     <td>
                         @if (@ViewBag.MoviesIHaveSeen != null)
                         {
-                            if (@ViewBag.MoviesIHaveSeen.Contains(Model.Id))
+                            if (@ViewBag.MoviesIHaveSeen.Contains(movie.Id))
                             { 
-                                <span class="clickable" onclick="ChangeSeenStatus(this, @Model.Id, false)">Ja. (Klikk for å endre.)</span>
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, false)">Ja. (Klikk for å endre.)</span>
                             }
                             else
                             { 
-                                <span class="clickable" onclick="ChangeSeenStatus(this, @Model.Id, true)">Nei. (Klikk for å markere som sett.)</span>
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, true)">Nei. (Klikk for å markere som sett.)</span>
                             }
                         }
                         else
@@ -105,16 +108,16 @@
                             <span>?</span>
                         }
                         <span style="margin-left: 2em;">
-                            <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@Model.ImdbId">Klikk</a> for å legge til i Vil Se listen...
+                            <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@movie.ImdbId">Klikk</a> for å legge til i Vil Se listen...
                         </span>
                     </td>
                 }
             </tr>
-            @if (whoHasSeen != null && whoHasSeen.ContainsKey(Model.Id))
+            @if (whoHasSeen != null && whoHasSeen.ContainsKey(movie.Id))
             { 
                 <tr>
                     <td>Sett av:</td>
-                    <td>@string.Join(", ", whoHasSeen[Model.Id])</td>
+                    <td>@string.Join(", ", whoHasSeen[movie.Id])</td>
                </tr>
             }
         </table>

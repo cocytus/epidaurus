@@ -171,7 +171,7 @@
     <Content Include="Views\Movie\MovieListEntry.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Movie\DisplayTemplates\Movie.cshtml" />
+    <Content Include="Views\Movie\Partials\Movie.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Login\LogOn.cshtml" />

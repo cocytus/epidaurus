@@ -81,19 +81,20 @@ namespace Epidaurus.Domain.Entities
             MovieSystemService.Save();
         }
 
-        public void ClearType(Cast.Roles type)
+        public void ClearType(Cast.Jobs type)
         {
-            var toDel = Casts.Where(el => el.Role == type.ToString()).ToList();
+            var toDel = Casts.Where(el => el.Job == type.ToString()).ToList();
             foreach (var del in toDel)
                 Casts.Remove(del);
         }
 
-        public void AddCastMember(Cast.Roles type, string name, string imdbId, int tmdbId, int sortOrder)
+        public void AddCastMember(Cast.Jobs job, string name, string imdbId, int tmdbId, int sortOrder, string roleName)
         {
             if (this.EntityState == System.Data.EntityState.Added)
                 throw new InvalidOperationException("Can not add cast to new movie");
             var person = MovieSystemService.GetOrCreatePerson(name, imdbId, tmdbId);
-            var cast = Cast.CreateCast(0, type.ToString(), person.Id, Id);
+            var cast = Cast.CreateCast(0, job.ToString(), person.Id, Id);
+            cast.RoleName = !string.IsNullOrWhiteSpace(roleName) ? roleName : null;
             MovieSystemService.DbEntities.AddToCasts(cast);
         }
     }

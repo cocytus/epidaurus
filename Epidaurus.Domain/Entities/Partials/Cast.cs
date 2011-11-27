@@ -7,7 +7,7 @@ namespace Epidaurus.Domain.Entities
 {
     public partial class Cast
     {
-        public enum Roles
+        public enum Jobs
         {
             Unknown,
             Actor,

@@ -25,13 +25,14 @@ namespace Epidaurus.ScannerLib
 
     public struct MovieDataSourcePersonData
     {
-        public MovieDataSourcePersonData(string name, string imdbId, int tmdbId, int sortOrder, Cast.Roles role)
+        public MovieDataSourcePersonData(string name, string imdbId, int tmdbId, int sortOrder, Cast.Jobs job, string roleName)
         {
             _name = name;
             _imdbId = imdbId;
             _tmdbId = tmdbId;
             _sortOrder = sortOrder;
-            _role = role;
+            _job = job;
+            _roleName = roleName;
         }
 
         private readonly string _name;
@@ -44,7 +45,10 @@ namespace Epidaurus.ScannerLib
         private readonly int _sortOrder;
         public int SortOrder { get { return _sortOrder; } }
 
-        private readonly Cast.Roles _role;
-        public Cast.Roles Role { get { return _role; } }
+        private readonly Cast.Jobs _job;
+        public Cast.Jobs Job { get { return _job; } }
+
+        private string _roleName;
+        public string RoleName { get { return _roleName; } }
     }
 }

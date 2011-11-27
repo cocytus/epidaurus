@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/27/2011 21:11:17
+-- Date Created: 11/27/2011 21:37:57
 -- Generated from EDMX file: C:\Dev\Web\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
@@ -195,9 +195,10 @@ GO
 CREATE TABLE [dbo].[Casts] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [SortOrder] int  NOT NULL,
-    [Role] nvarchar(16)  NOT NULL,
+    [Job] nvarchar(16)  NOT NULL,
     [PersonId] int  NOT NULL,
-    [MovieId] int  NOT NULL
+    [MovieId] int  NOT NULL,
+    [RoleName] nvarchar(64)  NULL
 );
 GO
 

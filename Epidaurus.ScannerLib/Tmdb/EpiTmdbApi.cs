@@ -83,16 +83,16 @@ namespace Epidaurus.ScannerLib.Tmdb
         {
             var jobMap = new [] 
             { 
-                new { r = Cast.Roles.Actor, jobs = new string[] { "actor" } },
-                new { r = Cast.Roles.Director , jobs = new string[] { "director" } },
-                new { r = Cast.Roles.Writer, jobs = new string[] { "author", "novel", "screenplay" } } 
+                new { j = Cast.Jobs.Actor, jobs = new string[] { "actor" } },
+                new { j = Cast.Jobs.Director , jobs = new string[] { "director" } },
+                new { j = Cast.Jobs.Writer, jobs = new string[] { "author", "novel", "screenplay" } } 
             };
 
-            var role = (from j in jobMap where j.jobs.Contains(c.Job.ToLowerInvariant()) select j.r).FirstOrDefault();
-            if (role == default(Cast.Roles))
+            var job = (from j in jobMap where j.jobs.Contains(c.Job.ToLowerInvariant()) select j.j).FirstOrDefault();
+            if (job == default(Cast.Jobs))
                 return null;
 
-            return new MovieDataSourcePersonData(c.Name, null, c.Id, c.Order, role);
+            return new MovieDataSourcePersonData(c.Name, null, c.Id, c.Order, job, c.Character);
         }
       
         private string GetPoster(IList<TmdbImage> posters)

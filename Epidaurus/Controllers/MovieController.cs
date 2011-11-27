@@ -115,10 +115,9 @@ namespace Epidaurus.Controllers
             get 
             { 
                 return _movieSystemService.DbEntities.Movies
-                    .Include("MovieAtStorages")
                     .Include("MovieAtStorages.StorageLocation")
-                    .Include("Casts.Person")
                     .Include("Genres")
+                    .Include("Casts.Person")
                     .AsQueryable(); 
             }
         }
