@@ -43,7 +43,7 @@
                                    { @MH.RuntimeHelper(movie.Runtime.Value);
                                    }</td></tr>
             <tr><td>IMDB Score</td><td>@MH.ScoreHelper(movie.Score)</td></tr>
-            <tr><td>Imdb </td>
+            <tr><td>Imdb</td>
                 <td>
                     <a href="http://www.imdb.com/title/@movie.ImdbId">@movie.ImdbId</a>
                     <span class="changeImdbDiv" onclick="ShowImdbIdEditBox(this, @movie.Id, 'mc_@(movie.Id)')">(Endre)</span>
@@ -61,7 +61,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Regisører</td>
+                <td>Regissører</td>
                 <td>
                     <ul class="horiziontalList">
                     @foreach (var director in @Model.Directors)
@@ -117,11 +117,11 @@
                         {
                             if (@ViewBag.MoviesIHaveSeen.Contains(movie.Id))
                             { 
-                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, false)">Ja. (Klikk for å endre.)</span>
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, false)">Ja. <img src="@Url.Content("~/Content/images/unsee.png")" alt="Klikk for å un-see!" title="Klikk for å un-see!"/></span>
                             }
                             else
                             { 
-                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, true)">Nei. (Klikk for å markere som sett.)</span>
+                                <span class="clickable" onclick="ChangeSeenStatus(this, @movie.Id, true)">Nei. <img src="@Url.Content("~/Content/images/see.png")" alt="Klikk for å indikere sett." title="Klikk for å indikere sett."/></span>
                             }
                         }
                         else
@@ -129,7 +129,7 @@
                             <span>?</span>
                         }
                         <span style="margin-left: 2em;">
-                            <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@movie.ImdbId">Klikk</a> for å legge til i Vil Se listen...
+                            Vil se: <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@movie.ImdbId"><span class="ui-icon ui-icon-inline ui-icon-plus"></span></a>
                         </span>
                     </td>
                 }

@@ -28,7 +28,7 @@ namespace Epidaurus.Helpers
             minutes -= hrs * 60;
             string res = minutes.ToString() + "m";
             if (hrs > 0)
-                res = hrs.ToString() + "h " + res;
+                res = hrs.ToString() + "t " + res;
             if (days > 0)
                 res = days.ToString() + "d " + res;
             return res;
