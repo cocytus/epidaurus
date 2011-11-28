@@ -78,7 +78,7 @@ namespace Epidaurus.ScannerLib.Tmdb
                            Poster = GetPoster(m.Posters),
                            Homepage = m.Homepage,
                            Year = (short) DateTime.Parse(m.Released).Year,
-                           Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).ToArray(),
+                           Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).Distinct().ToArray(),
                            Genres = (from g in m.Genres select g.Name).ToArray()
                        };
         }

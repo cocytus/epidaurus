@@ -50,5 +50,21 @@ namespace Epidaurus.ScannerLib
 
         private string _roleName;
         public string RoleName { get { return _roleName; } }
+
+        public override bool Equals(object obj)
+        {
+            var other = (MovieDataSourcePersonData)obj;
+            return other.Name != null && other.Name == Name && other.Job == Job;
+        }
+
+        public override int GetHashCode()
+        {
+            if (_name == null)
+                return 1;
+            unchecked
+            {
+                return _name.GetHashCode() + _job.GetHashCode();
+            }
+        }
     }
 }
