@@ -89,7 +89,7 @@ namespace Epidaurus.ScannerLib.Tmdb
             { 
                 new { j = Cast.Jobs.Actor, jobs = new string[] { "actor" } },
                 new { j = Cast.Jobs.Director , jobs = new string[] { "director" } },
-                new { j = Cast.Jobs.Writer, jobs = new string[] { "author", "novel", "screenplay" } } 
+                new { j = Cast.Jobs.Writer, jobs = new string[] { "author", "novel", "screenplay", "writer" } } 
             };
 
             var job = (from j in jobMap where j.jobs.Contains(c.Job.ToLowerInvariant()) select j.j).FirstOrDefault();
