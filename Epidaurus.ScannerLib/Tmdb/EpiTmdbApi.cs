@@ -76,10 +76,11 @@ namespace Epidaurus.ScannerLib.Tmdb
                            Score = (int) (double.Parse(m.Rating, CultureInfo.InvariantCulture)*10.0),
                            Votes = int.Parse(m.Votes),
                            Poster = GetPoster(m.Posters),
-                           Homepage = m.Homepage,
+                           Homepage = !string.IsNullOrWhiteSpace(m.Homepage) ? m.Homepage : null,
                            Year = (short) DateTime.Parse(m.Released).Year,
                            Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).Distinct().ToArray(),
-                           Genres = (from g in m.Genres select g.Name).ToArray()
+                           Genres = (from g in m.Genres select g.Name).ToArray(),
+                           TrailerUrl = !string.IsNullOrWhiteSpace(m.Trailer) ? m.Trailer : null
                        };
         }
 

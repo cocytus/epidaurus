@@ -82,10 +82,27 @@ textarea
     border-bottom: 1px solid red;
 }
 
+.trailerLink
+{
+    font-size: small;
+    color: grey;
+}
+
 .movieTitle
 {
-    font-size: large;
     font-weight: bold;
+    font-size: large;
+    color: white;
+}
+
+.movieTitle a
+{
+    color: white;
+}
+
+.movieTitle a:hover
+{
+    text-decoration: underline;
 }
 
 .movieContainer
@@ -257,14 +274,4 @@ ul.horiziontalList
 .horiziontalList li:first-child:before
 {
     content: "";
-}
-
-.movieTitle a
-{
-    color: white;
-}
-
-.movieTitle a:hover
-{
-    text-decoration: underline;
 }

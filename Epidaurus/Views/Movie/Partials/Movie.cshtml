@@ -27,14 +27,21 @@
                         <a href="http://www.themoviedb.org/movie/@movie.TmdbId">T</a>
                     }
                 </td> 
-                <td class="movieTitle">
-                    @if (!string.IsNullOrEmpty(movie.Homepage))
+                <td class="movieTitleContainer">
+                    <span class="movieTitle">
+                        @if (!string.IsNullOrEmpty(movie.Homepage))
+                        {
+                             <a href="@movie.Homepage" title="@movie.Homepage">@movie.Title</a>
+                        }
+                        else
+                        {
+                            @movie.Title
+                        }
+                    </span>
+
+                    @if (@Model.YoutubeTrailerId != null)
                     {
-                         <a href="@movie.Homepage" title="@movie.Homepage">@movie.Title</a>
-                    }
-                    else
-                    {
-                        @movie.Title
+                       <a href="javascript:void(0);" class="trailerLink" onclick="ViewYoutubeTrailer('@Model.YoutubeTrailerId')">(trailer)</a>
                     }
                 </td>
             </tr>

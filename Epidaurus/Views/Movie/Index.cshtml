@@ -12,6 +12,8 @@
 
 @Html.Partial("Partials/SelectImdbId")
 
+<div id="trailerDialog" style="display: none;"></div>
+
 <div id="filterFormContainer">
     <h2>@Model.Movies.Count() filmer (spilletid @MH.RuntimeHelper(Model.TotalPlayTime)):</h2>
 
@@ -54,7 +56,7 @@
     @foreach (var item in Model.Movies)
     {
         @Html.Partial("Partials/Movie", new MovieViewModel(item))
-     }
+    }
 </div>
 
 <script type="text/javascript">
@@ -137,6 +139,29 @@
             }
         });
     }
+        function SetupSpacing() {
+        $("#filterFormContainerSpacing").css("height", $("#filterFormContainer").outerHeight(true));
+    }
+
+    function SetupTrailerDialog() {
+        var jdc = $("#trailerDialog");
+        jdc.dialog({
+            modal : true,
+            position: "center",
+            width : "auto",
+            height : "auto",
+            autoOpen : false,
+            close : function () { $("#trailerDialog").empty(); },
+            buttons : [ { text: "Close", click: function() { $(this).dialog("close"); } } ]
+        });
+    }
+
+    function ViewYoutubeTrailer(youtubeId) {
+        var jdc = $("#trailerDialog");
+        var embedHtml = '<iframe width="640" height="480" src="http://www.youtube.com/embed/' + youtubeId + '?rel=0" frameborder="0" allowfullscreen></iframe>';
+        jdc.html(embedHtml);
+        jdc.dialog("open");
+    }
 
     $(function () {
         $("#filterForm :input[name|=\"Person\"]").bind("change", function () {
@@ -169,15 +194,6 @@
         $("#searchInputField").select();
         $("#searchInputField").focus();
 
-        SetupSpacing();
-    });
-
-    function SetupSpacing() {
-        $("#filterFormContainerSpacing").css("height", $("#filterFormContainer").outerHeight(true));
-    }
-
-
-    $(function () {
         $(".movieSourceClicky").bind("click", function () {
             var movieSourceId = $(this).data("moviesourceid");
             var thisElem = $(this);
@@ -205,6 +221,10 @@
                     alert("OK");
             });
         });
+
+        SetupTrailerDialog();
+
+        SetupSpacing();
     });
 </script>
 

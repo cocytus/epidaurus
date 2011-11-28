@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using Epidaurus.Domain.Entities;
 
@@ -66,12 +67,15 @@ namespace Epidaurus.ViewModels
     public class MovieViewModel
     {
         private readonly Movie _movie;
-        public Movie Movie { get { return _movie; } }
+        private Lazy<string> _youtubeTrailerUrl;
 
         public MovieViewModel(Movie movie)
         {
             _movie = movie;
+            _youtubeTrailerUrl = new Lazy<string>(TryGetYoutubeId);
         }
+
+        public Movie Movie { get { return _movie; } }
 
         public IList<Cast> Directors
         {
@@ -95,6 +99,24 @@ namespace Epidaurus.ViewModels
             {
                 return GetSortedJob(Cast.Jobs.Actor);
             }
+        }
+
+        private string TryGetYoutubeId()
+        {
+            var turl = Movie.TrailerUrl;
+            if (string.IsNullOrEmpty(turl))
+                return null;
+            var turlL = turl.ToLowerInvariant();
+            if (!turlL.Contains("youtube") && !turl.Contains("youtu.be"))
+                return null;
+
+            var m = Regex.Match(turl, @"[/=]([A-Za-z0-9_-]{10,12})(?:[/&]|$)", RegexOptions.CultureInvariant | RegexOptions.Multiline);
+            return m.Success ? m.Groups[1].Value : null;
+        }
+
+        public string YoutubeTrailerId
+        {
+            get { return _youtubeTrailerUrl.Value; }
         }
 
         private IList<Cast> GetSortedJob(Cast.Jobs job)

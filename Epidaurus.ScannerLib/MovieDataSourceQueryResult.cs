@@ -21,6 +21,7 @@ namespace Epidaurus.ScannerLib
         public string ImdbId { get; set; }
         public int? TmdbId { get; set; }
         public string Homepage { get; set; }
+        public string TrailerUrl { get; set; }
     }
 
     public struct MovieDataSourcePersonData

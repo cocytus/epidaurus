@@ -1094,6 +1094,30 @@ namespace Epidaurus.Domain.Entities
         private global::System.String _Homepage;
         partial void OnHomepageChanging(global::System.String value);
         partial void OnHomepageChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String TrailerUrl
+        {
+            get
+            {
+                return _TrailerUrl;
+            }
+            set
+            {
+                OnTrailerUrlChanging(value);
+                ReportPropertyChanging("TrailerUrl");
+                _TrailerUrl = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("TrailerUrl");
+                OnTrailerUrlChanged();
+            }
+        }
+        private global::System.String _TrailerUrl;
+        partial void OnTrailerUrlChanging(global::System.String value);
+        partial void OnTrailerUrlChanged();
 
         #endregion
     
