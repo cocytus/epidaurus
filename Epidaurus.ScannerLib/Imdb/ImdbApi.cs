@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -46,6 +47,22 @@ namespace Epidaurus.ScannerLib.Imdb
                     let m = _rexImdbTitle.Match(el.Url)
                     where m.Success
                     select m.Groups[1].Value).ToList();
+        }
+
+        public static int QuickScoreFetcher(string imdbId)
+        {
+            var url = "http://m.imdb.com/title/" + imdbId;
+            var wr = (HttpWebRequest)WebRequest.Create(url);
+            wr.UserAgent = "Mozilla";
+            using (var response = wr.GetResponse())
+            using (var sr = new StreamReader(response.GetResponseStream()))
+            {
+                var data = sr.ReadToEnd();
+                var m = Regex.Match(data, @"votes\"">\s+<strong>([0-9\.]+)");
+                if (!m.Success)
+                    throw new InvalidOperationException(string.Format("No score found for imdb {0}", imdbId));
+                return (int)(double.Parse(m.Groups[m.Groups.Count - 1].Value, CultureInfo.InvariantCulture) * 10.0);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Globalization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Net;
 using Epidaurus.Domain;
@@ -73,7 +74,20 @@ namespace Epidaurus.ScannerLib
             {
                 try
                 {
-                    return UpdateMovieFromTmdb(movie);
+                    var getScores = Task.Factory.StartNew<int>(() => Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId));
+
+                    var ret = UpdateMovieFromTmdb(movie);
+
+                    try
+                    {
+                        movie.Score = getScores.Result;
+                    }
+                    catch (AggregateException ex)
+                    {
+                        _log.Error("UpdateMovieFromDataSource GetMovieScoresFromImdbAsync: {0}", ex.InnerException.Message);
+                        movie.Score = -2;
+                    }
+                    return ret;
                 }
                 catch (TmdbNotConfiguredException)
                 {
