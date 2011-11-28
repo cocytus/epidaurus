@@ -69,6 +69,7 @@ textarea
     display: none;
 }
 
+/* Other */
 
 .movieBottom
 {
@@ -229,4 +230,25 @@ input, select
 select option:hover
 {
     background-color: #B0FFB0;
+}
+
+ul.horiziontalList
+{
+    margin: 0px;
+    padding-left: 0px;
+}
+
+.horiziontalList li
+{
+    display: inline;
+}
+
+.horiziontalList li:before
+{
+    content: "- ";
+}
+
+.horiziontalList li:first-child:before
+{
+    content: "";
 }

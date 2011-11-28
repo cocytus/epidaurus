@@ -42,39 +42,47 @@
             <tr>
                 <td>Genre</td>
                 <td>
-                    @foreach (var genre in @movie.Genres)
-                    { 
-                        <a href="javascript:null();" onclick="SetFilter('Genre',@genre.Id);">@genre.Name</a>  
-                    }
+                    <ul class="horiziontalList">
+                        @foreach (var genre in @movie.Genres)
+                        { 
+                            <li><a href="javascript:null();" onclick="SetFilter('Genre',@genre.Id);">@genre.Name</a></li>
+                        }
+                    </ul>
                 </td>
             </tr>
             <tr>
                 <td>Regisører</td>
                 <td>
+                    <ul class="horiziontalList">
                     @foreach (var director in @Model.Directors)
                     { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Person.Name</a>  
+                        <li><a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Person.Name</a></li>
                     }
+                    </ul>
                 </td>
             </tr>
             <tr>
                 <td>Forfattere</td>
                 <td>
+                    <ul class="horiziontalList">
                     @foreach (var writer in @Model.Writers)
                     { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Person.Name</a>  
+                        <li><a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Person.Name</a></li>
                     }
+                    </ul>
                 </td>
             </tr>
             <tr>
                 <td>Skuespillere</td>
                 <td>
-                    @foreach (var actor in @Model.Actors.Take(10))
-                    { 
-                        <a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);"
-                        @if (@actor.RoleName != null) { <text>title='As @actor.RoleName'</text> }
-                        >@actor.Person.Name</a>  
-                    }
+                    <ul class="horiziontalList">
+                        @foreach (var actor in @Model.Actors.Take(10))
+                        { 
+                            <li><a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);"
+                            @if (@actor.RoleName != null) { <text>title='As @actor.RoleName'</text> }
+                            >@actor.Person.Name</a></li>
+                        }
+                    </ul>
                 </td>
             </tr>
             <tr>
