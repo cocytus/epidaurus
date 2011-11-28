@@ -314,6 +314,7 @@ namespace Epidaurus.Controllers
 
         private static Dictionary<string, NameWithImageUrl> _safeFileNameCache;
         private static readonly object _safeFileNameCacheLock = new object();
+        private static DateTime _cacheTimesOutAt;
 
         private Dictionary<string, NameWithImageUrl> SafeFileNameCache
         {
@@ -321,7 +322,7 @@ namespace Epidaurus.Controllers
             {
                 lock (_safeFileNameCacheLock)
                 {
-                    if (_safeFileNameCache == null)
+                    if (_safeFileNameCache == null || _cacheTimesOutAt < DateTime.Now)
                         ReloadSafeFileNameCache();
 
                     return _safeFileNameCache;
@@ -336,6 +337,7 @@ namespace Epidaurus.Controllers
                 _safeFileNameCache = new Dictionary<string, NameWithImageUrl>();
                 foreach (var movie in _movieSystemService.DbEntities.Movies.Where(el => el.ImdbId != null))
                     _safeFileNameCache.Add(movie.ImdbId, new NameWithImageUrl(SafeMovieFileName(movie), movie.ImageUrl));
+                _cacheTimesOutAt = DateTime.Now + TimeSpan.FromMinutes(15);
             }
         }
 
