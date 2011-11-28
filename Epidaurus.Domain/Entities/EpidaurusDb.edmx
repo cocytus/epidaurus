@@ -170,7 +170,7 @@
     <Property Name="Job" Type="nvarchar" Nullable="false" MaxLength="16" />
     <Property Name="PersonId" Type="int" Nullable="false" />
     <Property Name="MovieId" Type="int" Nullable="false" />
-    <Property Name="RoleName" Type="nvarchar" Nullable="true" MaxLength="64" />
+    <Property Name="RoleName" Type="nvarchar" Nullable="true" MaxLength="200" />
   </EntityType>
   <EntityType Name="GenreMovie">
     <Key>

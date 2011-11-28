@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/27/2011 21:37:57
--- Generated from EDMX file: C:\Dev\Web\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
+-- Date Created: 11/28/2011 17:20:17
+-- Generated from EDMX file: C:\Dev\Externals\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -198,7 +198,7 @@ CREATE TABLE [dbo].[Casts] (
     [Job] nvarchar(16)  NOT NULL,
     [PersonId] int  NOT NULL,
     [MovieId] int  NOT NULL,
-    [RoleName] nvarchar(64)  NULL
+    [RoleName] nvarchar(200)  NULL
 );
 GO
 
