@@ -279,20 +279,6 @@ namespace Epidaurus.Controllers
             return new JsonResult() { Data = "OK" };
         }
 
-        private string _imageFolder;
-        private string ImageFolder 
-        {
-            get 
-            {
-                if (_imageFolder == null)
-                    _imageFolder = ConfigurationManager.AppSettings["ImageFolder"];
-                if (string.IsNullOrEmpty(_imageFolder))
-                    throw new ApplicationException("ImageFolder not configured!");
-                return _imageFolder;
-            }
-        
-        }
-
         #region Poster
         #region NameWithImageUrlCache
         private struct NameWithImageUrl
@@ -353,6 +339,19 @@ namespace Epidaurus.Controllers
         }
         #endregion
 
+        private string _imageFolder;
+        private string ImageFolder
+        {
+            get
+            {
+                if (_imageFolder == null)
+                    _imageFolder = ConfigurationManager.AppSettings["ImageFolder"];
+                if (string.IsNullOrEmpty(_imageFolder))
+                    throw new ApplicationException("ImageFolder not configured!");
+                return _imageFolder;
+            }
+
+        }
 
         [Authorize]
         public ActionResult Poster(string id)
@@ -375,6 +374,7 @@ namespace Epidaurus.Controllers
 
         private ActionResult DefaultPoster()
         {
+            Response.Cache.SetExpires(DateTime.Now + TimeSpan.FromSeconds(2));
             return base.File("~/Content/images/noPoster.png", "image/png");
         }
 

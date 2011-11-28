@@ -64,18 +64,6 @@ namespace Epidaurus.ScannerLib
             return movie;
         }
 
-        private void TryFindMovieIdAndUpdateMovie(Movie movie)
-        {
-            _log.Debug("Trying to find imdb id for " + movie.Title);
-            var newImdbId = Imdb.ImdbApi.ImdbIdFinder(movie.Title, movie.Year > 1800 ? (int?)movie.Year : null);
-            if (!string.IsNullOrEmpty(newImdbId))
-            {
-                var newMovie = _movieSystemService.SetImdbIdOnMovie(movie.Id, newImdbId);
-                if (!newMovie.ImdbQueried)
-                    UpdateMovieFromDataSource(newMovie);
-            }
-        }
-
         public bool UpdateMovieFromDataSource(Movie movie)
         {
             if (string.IsNullOrEmpty(movie.ImdbId))
@@ -96,6 +84,18 @@ namespace Epidaurus.ScannerLib
             {
                 _log.Error("{0} update failure: {1}", movie.ImdbId, ex.ToString()); //This should not update fail count...
                 return !(ex is WebException); //If webexception, return false to indicate break of loop
+            }
+        }
+
+        private void TryFindMovieIdAndUpdateMovie(Movie movie)
+        {
+            _log.Debug("Trying to find imdb id for " + movie.Title);
+            var newImdbId = Imdb.ImdbApi.ImdbIdFinder(movie.Title, movie.Year > 1800 ? (int?)movie.Year : null);
+            if (!string.IsNullOrEmpty(newImdbId))
+            {
+                var newMovie = _movieSystemService.SetImdbIdOnMovie(movie.Id, newImdbId);
+                if (!newMovie.ImdbQueried)
+                    UpdateMovieFromDataSource(newMovie);
             }
         }
 
