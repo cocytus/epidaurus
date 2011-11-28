@@ -55,28 +55,32 @@ namespace Epidaurus.ScannerLib.Tmdb
             }
 
             //The movie does not contain cast, we need to query again with imdb id to get this.
-            var m = _tmdbApi.GetMovieInfo(movies[0].Id);
+            return QueryMovieByTmdbId(movies[0].Id);
+        }
 
+        public MovieDataSourceQueryResult QueryMovieByTmdbId(int tmbdId)
+        {
+            var m = _tmdbApi.GetMovieInfo(tmbdId);
             if (m.Cast == null)
                 m.Cast = new List<TmdbCastPerson>();
             if (m.Genres == null)
                 m.Genres = new List<TmdbGenre>();
 
             return new MovieDataSourceQueryResult
-            {
-                Title = (string.IsNullOrEmpty(m.OriginalName) || m.OriginalName == m.Name) ? m.Name : string.Format("{0} ({1})", m.OriginalName, m.Name),
-                ImdbId = m.ImdbId,
-                TmdbId = m.Id,
-                Plot = m.Overview,
-                Runtime = int.Parse(m.Runtime),
-                Score = (int)(double.Parse(m.Rating, CultureInfo.InvariantCulture)*10.0),
-                Votes = int.Parse(m.Votes),
-                Poster = GetPoster(m.Posters),
-                Homepage = m.Homepage,
-                Year = (short)DateTime.Parse(m.Released).Year,
-                Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).ToArray(),
-                Genres =  (from g in m.Genres select g.Name).ToArray()
-            };
+                       {
+                           Title = (string.IsNullOrEmpty(m.OriginalName) || m.OriginalName == m.Name) ? m.Name : string.Format("{0} ({1})", m.OriginalName, m.Name),
+                           ImdbId = m.ImdbId,
+                           TmdbId = m.Id,
+                           Plot = m.Overview,
+                           Runtime = int.Parse(m.Runtime),
+                           Score = (int) (double.Parse(m.Rating, CultureInfo.InvariantCulture)*10.0),
+                           Votes = int.Parse(m.Votes),
+                           Poster = GetPoster(m.Posters),
+                           Homepage = m.Homepage,
+                           Year = (short) DateTime.Parse(m.Released).Year,
+                           Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).ToArray(),
+                           Genres = (from g in m.Genres select g.Name).ToArray()
+                       };
         }
 
         private static MovieDataSourcePersonData? CreateCast(TmdbCastPerson c)

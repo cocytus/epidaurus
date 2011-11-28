@@ -103,7 +103,7 @@ namespace Epidaurus.ScannerLib
 
         private void TryFindMovieIdAndUpdateMovie(Movie movie)
         {
-            _log.Debug("Trying to find imdb id for " + movie.Title);
+            _log.Trace("Trying to find imdb id for " + movie.Title);
             var newImdbId = Imdb.ImdbApi.ImdbIdFinder(movie.Title, movie.Year > 1800 ? (int?)movie.Year : null);
             if (!string.IsNullOrEmpty(newImdbId))
             {
@@ -116,7 +116,10 @@ namespace Epidaurus.ScannerLib
         private bool UpdateMovieFromTmdb(Movie movie)
         {
             var tmdb = new EpiTmdbApi();
-            var result = tmdb.QueryMovieByImdbId(movie.ImdbId);
+            var result = (movie.TmdbId.HasValue && movie.TmdbId.Value > 0) ? 
+                tmdb.QueryMovieByTmdbId(movie.TmdbId.Value) :
+                tmdb.QueryMovieByImdbId(movie.ImdbId);
+
             if (result != null)
             {
                 movie.ImdbQueried = true;
