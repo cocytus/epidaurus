@@ -241,6 +241,7 @@ namespace Epidaurus.Controllers
                 var movie = _movieSystemService.GetMovieById(id);
                 _movieInformationUpdater.UpdateMovieFromDataSource(movie);
                 _movieSystemService.Save();
+                ReloadSafeFileNameCache();
                 return View("MovieListEntry", movie);
             }
             catch (Exception ex)
@@ -260,6 +261,7 @@ namespace Epidaurus.Controllers
                 var movie = _movieSystemService.SetImdbIdOnMovie(id, imdbId);
                 _movieInformationUpdater.UpdateMovieFromDataSource(movie);
                 _movieSystemService.Save();
+                ReloadSafeFileNameCache();
                 return View("MovieListEntry", movie);
             }
             catch (Exception ex)
