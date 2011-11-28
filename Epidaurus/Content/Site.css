@@ -252,3 +252,13 @@ ul.horiziontalList
 {
     content: "";
 }
+
+.movieTitle a
+{
+    color: white;
+}
+
+.movieTitle a:hover
+{
+    text-decoration: underline;
+}

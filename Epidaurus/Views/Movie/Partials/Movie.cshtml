@@ -26,12 +26,21 @@
                         <a href="javascript:void(0);" onclick="UpdateMovie(this, @movie.Id, 'mc_@(movie.Id)')">u</a>
                     }
                 </td> 
-                <td class="movieTitle">@movie.Title</td>
+                <td class="movieTitle">
+                    @if (!string.IsNullOrEmpty(movie.Homepage))
+                    {
+                         <a href="@movie.Homepage" title="@movie.Homepage">@movie.Title</a>
+                    }
+                    else
+                    {
+                        @movie.Title
+                    }
+                </td>
             </tr>
             <tr><td>År</td><td>@movie.Year</td></tr>
             <tr><td>Lengde</td><td>@if (movie.Runtime.HasValue)
-                                    { @MH.RuntimeHelper(movie.Runtime.Value);
-                                    }</td></tr>
+                                   { @MH.RuntimeHelper(movie.Runtime.Value);
+                                   }</td></tr>
             <tr><td>IMDB Score</td><td>@MH.ScoreHelper(movie.Score)</td></tr>
             <tr><td>Imdb </td>
                 <td>
@@ -79,7 +88,8 @@
                         @foreach (var actor in @Model.Actors.Take(10))
                         { 
                             <li><a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);"
-                            @if (@actor.RoleName != null) { <text>title='As @actor.RoleName'</text> }
+                            @if (@actor.RoleName != null)
+                            { <text>title='As @actor.RoleName'</text> }
                             >@actor.Person.Name</a></li>
                         }
                     </ul>
