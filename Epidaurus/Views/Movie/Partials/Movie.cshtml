@@ -24,6 +24,7 @@
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
                     {
                         <a href="javascript:void(0);" onclick="UpdateMovie(this, @movie.Id, 'mc_@(movie.Id)')">u</a>
+                        <a href="http://www.themoviedb.org/movie/@movie.TmdbId">T</a>
                     }
                 </td> 
                 <td class="movieTitle">
@@ -99,7 +100,7 @@
                 <td>Lokal lokasjon</td>
                 <td>
                     @foreach (var movieSource in @movie.MovieAtStorages)
-                    { 
+                    {
                         <span>@movieSource.CleanedName <span class="movieSourceClicky clickable" data-moviesourceid="@movieSource.Id">@@</span> @movieSource.StorageLocation.Name, </span>
                     }
                 </td>
