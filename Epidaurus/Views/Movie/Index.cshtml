@@ -11,6 +11,7 @@
 }
 
 @Html.Partial("Partials/SelectImdbId")
+@Html.Partial("Partials/SelectTmdbId")
 
 <div id="trailerDialog" style="display: none;"></div>
 
@@ -82,14 +83,28 @@
         $("#" + containerId).prepend("<div style='position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: white; opacity: 0.55; vertical-align: center; text-align: center; color: black; font-size: 24px;'>" + text + "</div>");
     }
 
-    function UpdateMovie(objIn, movieId, container) {
+    function UpdateMovie(movieId, container) {
         ShowTempText(container, "Wait...");
         $.ajax({
-            "url" : "@Url.Action("UpdateMovie")" + "/" + movieId,
-            "type" : "POST",
-            "success" : function (data) {
+            url : "@Url.Action("UpdateMovie")" + "/" + movieId,
+            type : "POST",
+            success : function (data) {
                 $("#" + container).replaceWith(data);
             }
+        });
+    }
+
+    function UpdateTmdbId(movieId, containerId) {
+        SearchTmdb(null, function(newId) {
+            ShowTempText(containerId, "Wait...");
+            $.ajax({
+                url : "@Url.Action("SetMovieTmdbId")" + "/" + movieId,
+                type : "POST",
+                data : { "tmdbId" : newId },
+                success : function(data) {
+                    $("#" + containerId).replaceWith(data);
+                }
+            });
         });
     }
 
@@ -139,7 +154,8 @@
             }
         });
     }
-        function SetupSpacing() {
+
+    function SetupSpacing() {
         $("#filterFormContainerSpacing").css("height", $("#filterFormContainer").outerHeight(true));
     }
 

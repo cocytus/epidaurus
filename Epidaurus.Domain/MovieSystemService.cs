@@ -37,6 +37,11 @@ namespace Epidaurus.Domain
 			return DbEntities.Movies.FirstOrDefault(el => el.ImdbId == imdbId);
 		}
 
+        public Movie TryGetMovieByTmdbId(int tmdbId)
+        {
+            return DbEntities.Movies.FirstOrDefault(el => el.TmdbId == tmdbId);
+        }
+
 		public void AddMovie(Movie movie)
 		{
 			if (movie.MovieSystemService == null)
@@ -77,26 +82,61 @@ namespace Epidaurus.Domain
 			}
 
 			var existingMovie = DbEntities.Movies.FirstOrDefault(m => m.ImdbId == newImdbId);
-			if (existingMovie != null)
-			{
-				if (existingMovie.Id == movie.Id)
-					throw new InvalidOperationException("Insanity achieved. SetImdbIdOnMovie...");
+            if (existingMovie != null)
+            {
+                TransferMovie(movie, existingMovie);
+                movie = existingMovie;
+            }
+            else
+            {
+                movie.ImdbId = newImdbId;
+                movie.TmdbId = null;
+            }
 
-				foreach (var source in movie.MovieAtStorages.ToList())
-					existingMovie.MovieAtStorages.Add(source);
-
-				DbEntities.DeleteObject(movie);
-				Save();
-
-				return existingMovie;
-			}
-			else
-			{
-				movie.ImdbId = newImdbId;
-				Save();
-				return movie;
-			}
+			Save();
+			return movie;
 		}
+
+        //Same semantics as with SetImdbIdOnMovie
+        public Movie SetTmdbIdOnMovie(int movieId, int tmdbId)
+        {
+            if (tmdbId <= 0)
+                throw new ArgumentException("tmdbId", "Invalid value");
+
+            var movie = GetMovieById(movieId);
+            if (tmdbId == movie.TmdbId)
+            {
+                _log.Debug("SetTmdbIdOnMovie: Requested id change when no change occured? " + Environment.StackTrace);
+                return movie;
+            }
+
+            var existingMovie = DbEntities.Movies.FirstOrDefault(el => el.TmdbId == tmdbId);
+            if (existingMovie != null)
+            {
+                TransferMovie(movie, existingMovie);
+                movie = existingMovie;
+            }
+            else
+            {
+                movie.TmdbId = tmdbId;
+                movie.ImdbId = null;
+            }
+
+
+            Save();
+            return movie;
+        }
+
+        private void TransferMovie(Movie fromMovie, Movie toMovie)
+        {
+            if (toMovie.Id == fromMovie.Id)
+                throw new InvalidOperationException("Insanity achieved. TransferMovie...");
+
+            foreach (var source in fromMovie.MovieAtStorages.ToList())
+                toMovie.MovieAtStorages.Add(source);
+
+            DbEntities.DeleteObject(fromMovie);
+        }
 
 		public Genre GetOrCreateGenre(string genre)
 		{

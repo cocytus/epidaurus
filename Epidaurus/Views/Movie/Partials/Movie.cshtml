@@ -23,8 +23,9 @@
                 <td>
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
                     {
-                        <a href="javascript:void(0);" onclick="UpdateMovie(this, @movie.Id, 'mc_@(movie.Id)')">u</a>
+                        <a href="javascript:void(0);" onclick="UpdateMovie(@movie.Id, 'mc_@(movie.Id)')">u</a>
                         <a href="http://www.themoviedb.org/movie/@movie.TmdbId">T</a>
+                        <a href="javascript:void(0);" onclick="UpdateTmdbId(@movie.Id, 'mc_@(movie.Id)')">e</a>
                     }
                 </td> 
                 <td class="movieTitleContainer">

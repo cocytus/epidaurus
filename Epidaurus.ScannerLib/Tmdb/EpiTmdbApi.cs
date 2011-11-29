@@ -61,27 +61,32 @@ namespace Epidaurus.ScannerLib.Tmdb
         public MovieDataSourceQueryResult QueryMovieByTmdbId(int tmbdId)
         {
             var m = _tmdbApi.GetMovieInfo(tmbdId);
+            return ConvertTmdbMovie(m);
+        }
+
+        private static MovieDataSourceQueryResult ConvertTmdbMovie(TmdbMovie m)
+        {
             if (m.Cast == null)
                 m.Cast = new List<TmdbCastPerson>();
             if (m.Genres == null)
                 m.Genres = new List<TmdbGenre>();
 
             return new MovieDataSourceQueryResult
-                       {
-                           Title = (string.IsNullOrEmpty(m.OriginalName) || m.OriginalName == m.Name) ? m.Name : string.Format("{0} ({1})", m.OriginalName, m.Name),
-                           ImdbId = m.ImdbId,
-                           TmdbId = m.Id,
-                           Plot = m.Overview,
-                           Runtime =  !string.IsNullOrWhiteSpace(m.Runtime) ? int.Parse(m.Runtime) : 0,
-                           Score = (int) (double.Parse(m.Rating, CultureInfo.InvariantCulture)*10.0),
-                           Votes = int.Parse(m.Votes),
-                           Poster = GetPoster(m.Posters),
-                           Homepage = !string.IsNullOrWhiteSpace(m.Homepage) ? m.Homepage : null,
-                           Year = !string.IsNullOrEmpty(m.Released) ? (short) DateTime.Parse(m.Released).Year : (short)-1,
-                           Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).Distinct().ToArray(),
-                           Genres = (from g in m.Genres select g.Name).ToArray(),
-                           TrailerUrl = !string.IsNullOrWhiteSpace(m.Trailer) ? m.Trailer : null
-                       };
+            {
+                Title = (string.IsNullOrEmpty(m.OriginalName) || m.OriginalName == m.Name) ? m.Name : string.Format("{0} ({1})", m.OriginalName, m.Name),
+                ImdbId = m.ImdbId,
+                TmdbId = m.Id,
+                Plot = m.Overview,
+                Runtime = !string.IsNullOrWhiteSpace(m.Runtime) ? int.Parse(m.Runtime) : 0,
+                Score = (int)(double.Parse(m.Rating, CultureInfo.InvariantCulture) * 10.0),
+                Votes = int.Parse(m.Votes),
+                Poster = GetPoster(m.Posters),
+                Homepage = !string.IsNullOrWhiteSpace(m.Homepage) ? m.Homepage : null,
+                Year = !string.IsNullOrEmpty(m.Released) ? (short)DateTime.Parse(m.Released).Year : (short)-1,
+                Casts = (from c in m.Cast let cc = CreateCast(c) where cc.HasValue select cc.Value).Distinct().ToArray(),
+                Genres = (from g in m.Genres select g.Name).ToArray(),
+                TrailerUrl = !string.IsNullOrWhiteSpace(m.Trailer) ? m.Trailer : null
+            };
         }
 
         private static MovieDataSourcePersonData? CreateCast(TmdbCastPerson c)
@@ -100,13 +105,25 @@ namespace Epidaurus.ScannerLib.Tmdb
             return new MovieDataSourcePersonData(c.Name, null, c.Id, c.Order, job, c.Character);
         }
       
-        private string GetPoster(IList<TmdbImage> posters)
+        private static string GetPoster(IList<TmdbImage> posters)
         {
             var img =
                 posters.FirstOrDefault(el => el.ImageInfo.Type == "poster" && el.ImageInfo.Size == "mid") ??
                 posters.FirstOrDefault(el => el.ImageInfo.Type == "poster" && el.ImageInfo.Size == "original") ??
                 posters.FirstOrDefault();
             return img != null ? img.ImageInfo.Url : null;
+        }
+
+        public IList<MovieDataSourceQueryResult> Search(string q)
+        {
+            try
+            {
+                return (from el in _tmdbApi.MovieSearch(q) select ConvertTmdbMovie(el)).ToList();
+            }
+            catch (SerializationException)
+            {
+                return new List<MovieDataSourceQueryResult>();
+            }
         }
     }
 

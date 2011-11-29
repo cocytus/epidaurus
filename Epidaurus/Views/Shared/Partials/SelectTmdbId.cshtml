@@ -1,0 +1,66 @@
+﻿
+<div id="tmdbSearchDialog" title="TMDB Search" style="display: none;">
+    <div>
+        <form method="get" action="?">
+            <div>
+                Søk: <input type="text" name="tmdbSearchString" />
+                <button type="submit" name="tmdbSearchButton">Søk</button>
+            </div>
+        </form>
+        <p>Klikk på tittel for å velge film.</p>
+        <div class="tmdbSearchResults">
+            Søkeresultater...
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#tmdbSearchDialog").dialog({
+            modal: true,
+            position: "center",
+            width: 900,
+            height: 600,
+            autoOpen : false,
+            button: [{ text: "Cancel", click: function () { $(this).dialog("close"); } }]
+        });
+
+        $("#tmdbSearchDialog form").bind("submit", function() { DoSearchTmdb(); return false; });
+    });
+
+    var tmdbSelectFunc = null;
+
+    function SearchTmdb(initialText, selectFunction) {
+        tmdbSelectFunc = selectFunction;
+        $("#tmdbSearchDialog").dialog("open");
+
+        if (typeof(initialText) == "string" && initialText.length > 0) {
+            $("#tmdbSearchDialog input[name=tmdbSearchString]").val(initialText);
+            DoSearchTmdb();
+        }
+        else
+            $("#tmdbSearchDialog input[name=tmdbSearchString]").val("");
+
+    }
+
+    function DoSearchTmdb()
+    {
+        var jdc = $("#tmdbSearchDialog");
+        var searchFor = jdc.find("input[name=tmdbSearchString]").val();
+        if (searchFor.length == 0) {
+            alert("SearchSring empty");
+            return false;
+        }
+
+        $.get("@Url.Action("TmdbSearch", "Movie")", { q : searchFor }, 
+            function(data) { 
+                $("#tmdbSearchDialog .tmdbSearchResults").html(data); 
+                $("#tmdbSearchDialog .tmdbSearchResult").bind("click", 
+                    function() {
+                        $("#tmdbSearchDialog").dialog("close");
+                        tmdbSelectFunc($(this).attr("data-tmdbid"));
+                    });
+            });
+    }
+</script>

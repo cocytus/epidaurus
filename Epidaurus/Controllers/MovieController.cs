@@ -17,6 +17,7 @@ using Epidaurus.ViewModels;
 using System.Diagnostics;
 using Epidaurus.Security;
 using System.IO;
+using Epidaurus.ScannerLib.Tmdb;
 
 namespace Epidaurus.Controllers
 {
@@ -232,6 +233,15 @@ namespace Epidaurus.Controllers
             return PartialView(results);
         }
 
+        [Authorize]
+        public PartialViewResult TmdbSearch(string q)
+        {
+            var epiTmdbId = new EpiTmdbApi();
+            var results = epiTmdbId.Search(q);
+
+            return PartialView(results);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public ActionResult UpdateMovie(int id)
@@ -268,6 +278,25 @@ namespace Epidaurus.Controllers
             {
                 _log.ErrorException(string.Format("SetMovieImdbId failed: id: {0} imdbId: {1}", id, imdbId), ex);
                 return this.Content(string.Format("<div>ERROR SetMovieImdbId failed: id: {0} imdbId: {1} <br/>Exception:<br/>{2}</div>", id, imdbId, ex.ToString()));
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult SetMovieTmdbId(int id, int tmdbId)
+        {
+            try
+            {
+                var movie = _movieSystemService.SetTmdbIdOnMovie(id, tmdbId);
+                _movieInformationUpdater.UpdateMovieFromDataSource(movie);
+                _movieSystemService.Save();
+                ReloadSafeFileNameCache();
+                return View("MovieListEntry", movie);
+            }
+            catch (Exception ex)
+            {
+                _log.ErrorException(string.Format("SetMovieTmdbId failed: id: {0} tmdbId: {1}", id, tmdbId), ex);
+                return this.Content(string.Format("<div>ERROR SetMovieTmdbId failed: id: {0} tmdbId: {1} <br/>Exception:<br/>{2}</div>", id, tmdbId, ex.ToString()));
             }
         }
          
@@ -356,6 +385,9 @@ namespace Epidaurus.Controllers
         [Authorize]
         public ActionResult Poster(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return DefaultPoster();
+
             var nameWithImageUrl = GetNameAndImageUrlForMovie(id);
             if (nameWithImageUrl.IsDefault)
                 return DefaultPoster();

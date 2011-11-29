@@ -1,0 +1,23 @@
+﻿@model IList<Epidaurus.ScannerLib.MovieDataSourceQueryResult>
+
+@if (Model.Count == 0) {
+    <div>Ingenting funnet</div>
+}
+else
+{
+    <table width="100%">
+        <thead>
+            <tr><th>Tittel</th><th>År</th><th>ID</th><th>Imdb</th><th>Poster</th></tr>
+        </thead>
+        @foreach(var result in Model)
+        {
+            <tr>
+                <td><span data-tmdbid="@result.TmdbId" class="clickable tmdbSearchResult">@result.Title</span></td>
+                <td>@result.Year</td>
+                <td><a target="_blank" href="http://www.imdb.com/title/@result.ImdbId">@result.ImdbId</a></td>
+                <td>@result.TmdbId</td>
+                <td><img src="@result.Poster" height="100" alt="Poster" /></td>
+            </tr>
+        }
+    </table>
+}
