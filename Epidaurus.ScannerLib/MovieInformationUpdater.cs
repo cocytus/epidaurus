@@ -26,7 +26,7 @@ namespace Epidaurus.ScannerLib
 
         public void UpdateAllMoviesInDatabase()
         {
-            foreach (var movie in _movieSystemService.GetMoviesThatShouldBeUpdated())
+            foreach (var movie in _movieSystemService.GetMoviesThatShouldBeUpdated().Take(50))
             {
                 if (string.IsNullOrEmpty(movie.ImdbId))
                     TryFindMovieIdAndUpdateMovie(movie);
