@@ -67,26 +67,50 @@ namespace Epidaurus.ScannerLib
 
         public bool UpdateMovieFromDataSource(Movie movie)
         {
-            if (string.IsNullOrEmpty(movie.ImdbId))
+            if (string.IsNullOrEmpty(movie.ImdbId) && (movie.TmdbId == null || movie.TmdbId.Value == 0))
                 throw new ArgumentNullException("No IMDB id!");
 
             try
             {
                 try
                 {
-                    var getScores = Task.Factory.StartNew<int>(() => Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId));
+                    //Overview: if we have an IMDB, start fetching the ImdbApi score asynchronously, then fetch Tmdb data.
+                    //After Tmdb data fetch, if either we did not have an imdb id beforehand, of if the imdbid changed, update the score from imdb synchronously.
+
+                    Task<int> getScores = null;
+                    if (!string.IsNullOrEmpty(movie.ImdbId))
+                        Task.Factory.StartNew<int>(() => Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId));
+                    var requestedImdbId = movie.ImdbId;
 
                     var ret = UpdateMovieFromTmdb(movie);
 
-                    try
+                    if (getScores != null)
                     {
-                        movie.Score = getScores.Result;
+                        try
+                        {
+                            movie.Score = getScores.Result;
+                        }
+                        catch (AggregateException ex)
+                        {
+                            _log.Error("UpdateMovieFromDataSource GetMovieScoresFromImdbAsync: {0}", ex.InnerException.Message);
+                            movie.Score = -2;
+                        }
                     }
-                    catch (AggregateException ex)
+
+                    if ((getScores == null || movie.ImdbId != requestedImdbId) && !string.IsNullOrEmpty(movie.ImdbId))
                     {
-                        _log.Error("UpdateMovieFromDataSource GetMovieScoresFromImdbAsync: {0}", ex.InnerException.Message);
-                        movie.Score = -2;
+                        try
+                        {
+                            _log.Debug("Fetching imdb score synchronously. MovieId {0} Old ImdbId {1} New ImdbId {2}", movie.Id, requestedImdbId, movie.ImdbId);
+                            movie.Score = Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId);
+                        }
+                        catch(Exception ex)
+                        {
+                            _log.Error("UpdateMovieFromDataSource Sync QuickScoreFetcher failed with: {0}", ex.InnerException.Message);
+                            movie.Score = -3;
+                        }
                     }
+
                     return ret;
                 }
                 catch (TmdbNotConfiguredException)
@@ -132,6 +156,8 @@ namespace Epidaurus.ScannerLib
                 movie.Homepage = result.Homepage;
                 movie.SetGenres(result.Genres);
                 movie.TrailerUrl = result.TrailerUrl;
+                if (!string.IsNullOrEmpty(result.ImdbId))
+                    movie.ImdbId = result.ImdbId;
 
                 movie.Casts.ToList().ForEach(_movieSystemService.DbEntities.DeleteObject);
                 foreach (var cast in result.Casts)
