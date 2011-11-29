@@ -44,7 +44,7 @@ namespace Epidaurus.Controllers
             movies = movies.Where(m => m.MovieAtStorages.Any(mas => !mas.Ignore));
 
             if (!string.IsNullOrEmpty(mi.Search))
-                movies = movies.Where(e => e.Title.Contains(mi.Search));
+                movies = movies.Where(e => e.Title.Contains(mi.Search) || e.MovieAtStorages.Any(mas=>mas.CleanedName.Contains(mi.Search)));
 
             if (mi.Person.HasValue)
                 movies = movies.Where(m => m.Casts.Any(c => c.PersonId == mi.Person.Value));
@@ -62,13 +62,18 @@ namespace Epidaurus.Controllers
                     movies = movies.OrderByDescending(el => el.AddedAt).ThenBy(el => el.Title); break;
             }
 
-            List<Movie> movieList;
+            var sw = Stopwatch.StartNew();
+            
+            List<Movie> movieList = movies.ToList();
+            
+            ViewBag.DbCallTime = sw.ElapsedMilliseconds;
+
             if (mi.SelectedUsers != null && mi.SelectedUsers.Length > 0)
             {
                 if (mi.SeenNotSeen == SeenNotSeen.NotSeen)
                 {
                     var idFilter = new HashSet<int>(from user in db.Users from ss in user.SeenStatuses where mi.SelectedUsers.Contains(user.Username) select ss.Movie.Id);
-                    movieList = movies.ToList().Where(m => !idFilter.Contains(m.Id)).ToList();
+                    movieList = movieList.Where(m => !idFilter.Contains(m.Id)).ToList();
                 }
                 else
                 {
@@ -79,11 +84,10 @@ namespace Epidaurus.Controllers
                             group ug by ug.MovieId into grp
                             where grp.Count() == selUsersCount
                             select grp.Key).ToList();
-                    movieList = movies.ToList().Where(m => idFilter.Contains(m.Id)).ToList();
+                    movieList = movieList.Where(m => idFilter.Contains(m.Id)).ToList();
                 }
             }
-            else
-                movieList = movies.ToList();
+
             vm.Movies = movieList;
             var totalPlayTime = vm.Movies.Sum(el => el.Runtime);
             vm.TotalPlayTime = totalPlayTime.HasValue ? totalPlayTime.Value : 0;
