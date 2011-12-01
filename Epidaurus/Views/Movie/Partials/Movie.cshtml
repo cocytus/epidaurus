@@ -74,7 +74,7 @@
                     <ul class="horiziontalList">
                     @foreach (var director in @Model.Directors)
                     { 
-                        <li><a href="javascript:null();" onclick="SetFilter('Person',@director.Id);">@director.Person.Name</a></li>
+                        <li><a href="javascript:null();" onclick="SetFilter('Person',@director.Person.Id);">@director.Person.Name</a></li>
                     }
                     </ul>
                 </td>
@@ -85,7 +85,7 @@
                     <ul class="horiziontalList">
                     @foreach (var writer in @Model.Writers)
                     { 
-                        <li><a href="javascript:null();" onclick="SetFilter('Person',@writer.Id);">@writer.Person.Name</a></li>
+                        <li><a href="javascript:null();" onclick="SetFilter('Person',@writer.Person.Id);">@writer.Person.Name</a></li>
                     }
                     </ul>
                 </td>
@@ -96,7 +96,7 @@
                     <ul class="horiziontalList">
                         @foreach (var actor in @Model.Actors.Take(10))
                         { 
-                            <li><a href="javascript:null();" onclick="SetFilter('Person',@actor.Id);"
+                            <li><a href="javascript:null();" onclick="SetFilter('Person',@actor.Person.Id);"
                             @if (@actor.RoleName != null)
                             { <text>title='As @actor.RoleName'</text> }
                             >@actor.Person.Name</a></li>
