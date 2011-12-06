@@ -18,6 +18,7 @@ using System.Diagnostics;
 using Epidaurus.Security;
 using System.IO;
 using Epidaurus.ScannerLib.Tmdb;
+using System.Data.Objects;
 
 namespace Epidaurus.Controllers
 {
@@ -38,8 +39,10 @@ namespace Epidaurus.Controllers
         public ActionResult Index(MovieFilterViewModel mi)
         {
             var db = _movieSystemService.DbEntities;
+            //db.ObjectStateManager.
             var vm = CreateMovieListViewModel(mi);
             var movies = MoviesWithReferences;
+            ((ObjectQuery<Movie>)movies).MergeOption = MergeOption.NoTracking;
 
             movies = movies.Where(m => m.MovieAtStorages.Any(mas => !mas.Ignore));
 
@@ -65,7 +68,7 @@ namespace Epidaurus.Controllers
             var sw = Stopwatch.StartNew();
             
             List<Movie> movieList = movies.ToList();
-            
+
             ViewBag.DbCallTime = sw.ElapsedMilliseconds;
 
             if (mi.SelectedUsers != null && mi.SelectedUsers.Length > 0)
