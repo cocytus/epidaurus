@@ -116,9 +116,9 @@
             <tr><td>Plot</td><td>@movie.Plot</td></tr>
             <tr><td>Lagt til</td><td>@movie.AddedAt.ToShortDateString()</td></tr>
 
-            <tr>
-                @if (HttpContext.Current.User.Identity.IsAuthenticated)
-                { 
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+            { 
+                <tr>
                     <td>Sett?</td>
                     <td>
                         @if (@ViewBag.MoviesIHaveSeen != null)
@@ -140,8 +140,8 @@
                             Vil se: <a href="javascript:void(0);" class="addToToWatch" data-imdbId="@movie.ImdbId"><span class="ui-icon ui-icon-inline ui-icon-plus"></span></a>
                         </span>
                     </td>
-                }
-            </tr>
+                </tr>
+            }
             @if (whoHasSeen != null && whoHasSeen.ContainsKey(movie.Id))
             { 
                 <tr>
