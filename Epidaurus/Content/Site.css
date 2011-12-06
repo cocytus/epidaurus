@@ -275,3 +275,8 @@ ul.horiziontalList
 {
     content: "";
 }
+
+.movieEntryFirstColumn
+{
+    width: 100px;
+}
