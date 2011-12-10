@@ -101,6 +101,14 @@ namespace Epidaurus.ViewModels
             }
         }
 
+        public bool HasSample
+        {
+            get
+            {
+                return _movie.MovieAtStorages.Any(el => el.SampleRelativePath != null);
+            }
+        }
+
         private string TryGetYoutubeId()
         {
             var turl = Movie.TrailerUrl;

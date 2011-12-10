@@ -23,9 +23,15 @@
                 <td class="movieEntryFirstColumn">
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
                     {
+                        <text>
                         <a href="javascript:void(0);" onclick="UpdateMovie(@movie.Id, 'mc_@(movie.Id)')">u</a>
                         <a href="http://www.themoviedb.org/movie/@movie.TmdbId">T</a>
                         <a href="javascript:void(0);" onclick="UpdateTmdbId(@movie.Id, 'mc_@(movie.Id)')">e</a>
+                        @if (Model.HasSample)
+                        { 
+                            <a href="@Url.Action("DownloadSample", new { id = movie.Id })">P</a>
+                        }
+                        </text>
                     }
                 </td> 
                 <td class="movieTitleContainer">
