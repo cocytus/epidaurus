@@ -59,6 +59,8 @@
     <Compile Include="Entities\Partials\Movie.cs" />
     <Compile Include="Entities\Partials\StorageLocation.cs" />
     <Compile Include="Entities\Partials\User.cs" />
+    <Compile Include="Mime\IMimeTypeResolver.cs" />
+    <Compile Include="Mime\StaticMimeTypeResolver.cs" />
     <Compile Include="MovieSystemService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,6 +77,7 @@
   <ItemGroup>
     <Content Include="Entities\EpidaurusDb.edmx.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
