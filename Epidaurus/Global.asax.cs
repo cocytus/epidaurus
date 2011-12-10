@@ -11,6 +11,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Epidaurus.Domain;
 using Epidaurus.ScannerLib;
+using Epidaurus.Domain.Mime;
 
 namespace Epidaurus
 {
@@ -53,6 +54,7 @@ namespace Epidaurus
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterType<MovieSystemService>().InstancePerHttpRequest();
             builder.RegisterType<MovieInformationUpdater>().InstancePerHttpRequest();
+            builder.RegisterType<StaticMimeTypeResolver>().As<IMimeTypeResolver>().SingleInstance();
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }

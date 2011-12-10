@@ -19,6 +19,7 @@ using Epidaurus.Security;
 using System.IO;
 using Epidaurus.ScannerLib.Tmdb;
 using System.Data.Objects;
+using Epidaurus.Domain.Mime;
 
 namespace Epidaurus.Controllers
 {
@@ -27,11 +28,13 @@ namespace Epidaurus.Controllers
         private static readonly NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private readonly MovieSystemService _movieSystemService;
         private readonly MovieInformationUpdater _movieInformationUpdater;
+        private readonly IMimeTypeResolver _mimeTypeResolver;
 
-        public MovieController(MovieSystemService movieSystemService, MovieInformationUpdater movieInformationUpdater)
+        public MovieController(MovieSystemService movieSystemService, MovieInformationUpdater movieInformationUpdater, IMimeTypeResolver mimeTypeResolver)
         {
             _movieSystemService = movieSystemService;
             _movieInformationUpdater = movieInformationUpdater;
+            _mimeTypeResolver = mimeTypeResolver;
         }
 
         // GET: /Movie/
@@ -313,6 +316,26 @@ namespace Epidaurus.Controllers
         {
             _movieSystemService.IgnoreMovieSource(id);
             return new JsonResult() { Data = "OK" };
+        }
+
+        public ActionResult DownloadSample(int id)
+        {
+            try
+            {
+                var movie = _movieSystemService.GetMovieById(id);
+                var samplePaths = (from mas in movie.MovieAtStorages where mas.SampleRelativePath != null select mas.SampleRelativePath).ToList();
+                if (samplePaths.Count == 0)
+                    throw new InvalidOperationException("Movie does not have a sample");
+                var samplePath = (from sp in samplePaths where System.IO.File.Exists(sp) select sp).FirstOrDefault();
+                if (samplePath == null)
+                    throw new InvalidOperationException("Movie has samples, but none accessible");
+                var ext = System.IO.Path.GetExtension(samplePath);
+                return this.File(samplePath, _mimeTypeResolver.Resolve(samplePath), movie.Title + " sample" + ext);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpException(404, "Not found: " + ex.Message);
+            }
         }
 
         #region Poster
