@@ -70,6 +70,8 @@ namespace Epidaurus.ScannerLib
             if (string.IsNullOrEmpty(movie.ImdbId) && (movie.TmdbId == null || movie.TmdbId.Value == 0))
                 throw new ArgumentNullException("No IMDB id!");
 
+            Task<int> getScores = null;
+
             try
             {
                 try
@@ -77,9 +79,8 @@ namespace Epidaurus.ScannerLib
                     //Overview: if we have an IMDB, start fetching the ImdbApi score asynchronously, then fetch Tmdb data.
                     //After Tmdb data fetch, if either we did not have an imdb id beforehand, of if the imdbid changed, update the score from imdb synchronously.
 
-                    Task<int> getScores = null;
                     if (!string.IsNullOrEmpty(movie.ImdbId))
-                        Task.Factory.StartNew<int>(() => Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId));
+                        getScores = Task.Factory.StartNew<int>(() => Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId));
                     var requestedImdbId = movie.ImdbId;
 
                     var ret = UpdateMovieFromTmdb(movie);
@@ -89,6 +90,8 @@ namespace Epidaurus.ScannerLib
                         try
                         {
                             movie.Score = getScores.Result;
+                            getScores.Dispose();
+                            getScores = null;
                         }
                         catch (AggregateException ex)
                         {
@@ -104,7 +107,7 @@ namespace Epidaurus.ScannerLib
                             _log.Debug("Fetching imdb score synchronously. MovieId {0} Old ImdbId {1} New ImdbId {2}", movie.Id, requestedImdbId, movie.ImdbId);
                             movie.Score = Imdb.ImdbApi.QuickScoreFetcher(movie.ImdbId);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             _log.Error("UpdateMovieFromDataSource Sync QuickScoreFetcher failed with: {0}", ex.InnerException.Message);
                             movie.Score = -3;
@@ -122,6 +125,21 @@ namespace Epidaurus.ScannerLib
             {
                 _log.Error("{0} update failure: {1}", movie.ImdbId, ex.ToString()); //This should not update fail count...
                 return !(ex is WebException); //If webexception, return false to indicate break of loop
+            }
+            finally
+            {
+                if (getScores != null) //We need to observe any exceptions, thus this code.
+                {
+                    getScores.Wait(5000);
+                    try
+                    {
+                        var hm = getScores.Result;
+                    }
+                    catch
+                    {
+                        _log.Error("In finally, getscores.Result failed...");
+                    }
+                }
             }
         }
 
