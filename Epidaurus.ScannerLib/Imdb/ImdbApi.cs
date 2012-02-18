@@ -15,6 +15,8 @@ namespace Epidaurus.ScannerLib.Imdb
 {
     public static class ImdbApi
     {
+        private static readonly NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
         //TODO: This should return MovieDataSourceQueryResult instead.
         public static ImdbSearchResult GetInfo(string imdbId)
         {
@@ -43,7 +45,14 @@ namespace Epidaurus.ScannerLib.Imdb
         private static IList<string> SearchForPossibleImdbIds(string movieName, int? year)
         {
             var query = movieName + (year.HasValue ? " " + year.Value.ToString() : "") + " site:imdb.com";
-            return (from el in GoogleApi.Search(query)
+            var googleResult = GoogleApi.Search(query);
+            if (googleResult == null)
+            {
+                _log.Warn("Google search for '{0}' (year: '{1}') returned nulll", movieName, year);
+                return new List<string>();
+            }
+
+            return (from el in googleResult
                     let m = _rexImdbTitle.Match(el.Url)
                     where m.Success
                     select m.Groups[1].Value).ToList();
