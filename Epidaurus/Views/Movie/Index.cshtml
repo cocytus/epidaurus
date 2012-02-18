@@ -114,11 +114,6 @@
         document.editingMovieContainer = container;
 
         var movieTitle = $("#" + container + " td.movieTitle").text();
-        if (movieTitle.length == 0) {
-            alert("did not find title");
-            return;
-        }
-
         MovieSelectDialog(movieTitle, SetImdbId);
     }
 
