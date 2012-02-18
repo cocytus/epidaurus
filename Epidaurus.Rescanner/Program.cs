@@ -58,7 +58,7 @@ namespace Rescanner
                     _log.Debug("Folder scan done, updating movie data...");
                 }
 
-                using (var ts = new TransactionScope(TransactionScopeOption.Required))
+                using (var ts = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5)))
                 {
                     using (var movieSystemService = new MovieSystemService())
                     {
