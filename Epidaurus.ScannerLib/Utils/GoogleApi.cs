@@ -36,7 +36,7 @@ namespace Epidaurus.ScannerLib.Utils
 
         private static void ThrottleSearches()
         {
-            var toSleep = (PreviousSearchTime + TimeSpan.FromSeconds(1)) - DateTime.Now;
+            var toSleep = (PreviousSearchTime + TimeSpan.FromMilliseconds(1100)) - DateTime.Now;
             if (toSleep.TotalMilliseconds > 0.0)
                 Thread.Sleep(toSleep);
         }
