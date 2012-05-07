@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 
 namespace Epidaurus.Security
 {
-
     //Note: Nothing done to prevent stealing of sessions'n stuff.
     public static class SecurityService
     {
@@ -39,9 +38,8 @@ namespace Epidaurus.Security
             user.LastLogin = DateTime.Now;
             db.SaveChanges();
 
-            var roles = user.IsAdmin ? new string[] { "Admin" } : new string[0];
+            var roles = user.Roles.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             var principal = new EpiPrincipal(user.Username, roles);
-
             SetCurrentPrincipal(principal);
         }
 

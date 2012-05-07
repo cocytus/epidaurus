@@ -70,7 +70,7 @@
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
     <Property Name="LastLogin" Type="datetime" Nullable="false" />
     <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="64" />
-    <Property Name="IsAdmin" Type="bit" Nullable="false" />
+    <Property Name="Roles" Type="nvarchar" Nullable="true" MaxLength="128" />
   </EntityType>
   <EntityType Name="Movies">
     <Key>
@@ -394,9 +394,9 @@
           <Property Type="DateTime" Name="LastLogin" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="64" />
           <NavigationProperty Name="SeenStatuses" Relationship="Epidaurus.Domain.Entities.UserSeenStatus" FromRole="User" ToRole="SeenStatus" />
-          <Property Type="Boolean" Name="IsAdmin" Nullable="false" />
           <NavigationProperty Name="RememberedSessions" Relationship="Epidaurus.Domain.Entities.UserRememberedSessions" FromRole="User" ToRole="RememberedSessions" />
           <NavigationProperty Name="ToWatches" Relationship="Epidaurus.Domain.Entities.UserToWatch" FromRole="User" ToRole="ToWatch" />
+          <Property Type="String" Name="Roles" Nullable="false" MaxLength="128" />
         </EntityType>
         <EntityType Name="Movie">
           <Key>
@@ -628,7 +628,7 @@
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+          <ScalarProperty Name="Roles" ColumnName="Roles" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -796,7 +796,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="EpidaurusDb" DisplayType="true" ZoomLevel="62" >
-        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.User" Width="1.5" PointX="12.625" PointY="6.75" Height="2.5571907552083331" />
+        <EntityTypeShape EntityType="Epidaurus.Domain.Entities.User" Width="1.5" PointX="12.625" PointY="6.75" Height="2.5571907552083335" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.Movie" Width="2.25" PointX="6.5" PointY="4.625" Height="5.057109375" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.MovieAtStorage" Width="2.375" PointX="3.375" PointY="3.5" Height="2.3648893229166656" />
         <EntityTypeShape EntityType="Epidaurus.Domain.Entities.StorageLocation" Width="1.5" PointX="1" PointY="3.625" Height="2.5571907552083317" />
@@ -810,8 +810,8 @@
           <ConnectorPoint PointX="3.375" PointY="4.7449446614583337" />
         </AssociationConnector>
         <AssociationConnector Association="Epidaurus.Domain.Entities.UserSeenStatus">
-          <ConnectorPoint PointX="12.625" PointY="7.0862939453125" />
-          <ConnectorPoint PointX="11.75" PointY="7.0862939453125" />
+          <ConnectorPoint PointX="12.625" PointY="7.0862939453124989" />
+          <ConnectorPoint PointX="11.75" PointY="7.0862939453124989" />
         </AssociationConnector>
         <AssociationConnector Association="Epidaurus.Domain.Entities.MovieMovieAtStorage">
           <ConnectorPoint PointX="6.5" PointY="5.2449446614583328" />

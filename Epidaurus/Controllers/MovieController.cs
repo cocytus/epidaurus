@@ -253,7 +253,7 @@ namespace Epidaurus.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = EpiRoles.Admin)]
         public ActionResult UpdateMovie(int id)
         {
             try
@@ -272,7 +272,7 @@ namespace Epidaurus.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = EpiRoles.Admin)]
         public ActionResult SetMovieImdbId(int id, string imdbId)
         {
             try
@@ -292,7 +292,7 @@ namespace Epidaurus.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = EpiRoles.Admin)]
         public ActionResult SetMovieTmdbId(int id, int tmdbId)
         {
             try
@@ -311,7 +311,7 @@ namespace Epidaurus.Controllers
         }
          
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = EpiRoles.Admin)]
         public JsonResult IgnoreSource(int id)
         {
             _movieSystemService.IgnoreMovieSource(id);

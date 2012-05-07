@@ -1,4 +1,4 @@
-﻿@model Epidaurus.Domain.Entities.User
+﻿@model Epidaurus.ViewModels.UserEditorViewModels.UserViewModel
 
 @{
     ViewBag.Title = "Create user";
@@ -40,11 +40,11 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.IsAdmin)
+            @Html.LabelFor(model => model.Roles)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.IsAdmin)
-            @Html.ValidationMessageFor(model => model.IsAdmin)
+            @Html.EditorFor(model => model.Roles)
+            @Html.ValidationMessageFor(model => model.Roles)
         </div>
 
         <p>

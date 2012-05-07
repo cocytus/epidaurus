@@ -21,7 +21,7 @@
         <table>
             <tr>
                 <td class="movieEntryFirstColumn">
-                    @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole("Admin"))
+                    @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole(EpiRoles.Admin))
                     {
                         <text>
                         <a href="javascript:void(0);" onclick="UpdateMovie(@movie.Id, 'mc_@(movie.Id)')">u</a>

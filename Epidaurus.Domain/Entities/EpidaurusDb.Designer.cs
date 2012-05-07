@@ -2454,15 +2454,15 @@ namespace Epidaurus.Domain.Entities
         /// <param name="password">Initial value of the Password property.</param>
         /// <param name="lastLogin">Initial value of the LastLogin property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        /// <param name="isAdmin">Initial value of the IsAdmin property.</param>
-        public static User CreateUser(global::System.String username, global::System.String password, global::System.DateTime lastLogin, global::System.String name, global::System.Boolean isAdmin)
+        /// <param name="roles">Initial value of the Roles property.</param>
+        public static User CreateUser(global::System.String username, global::System.String password, global::System.DateTime lastLogin, global::System.String name, global::System.String roles)
         {
             User user = new User();
             user.Username = username;
             user.Password = password;
             user.LastLogin = lastLogin;
             user.Name = name;
-            user.IsAdmin = isAdmin;
+            user.Roles = roles;
             return user;
         }
 
@@ -2573,24 +2573,24 @@ namespace Epidaurus.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Boolean IsAdmin
+        public global::System.String Roles
         {
             get
             {
-                return _IsAdmin;
+                return _Roles;
             }
             set
             {
-                OnIsAdminChanging(value);
-                ReportPropertyChanging("IsAdmin");
-                _IsAdmin = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("IsAdmin");
-                OnIsAdminChanged();
+                OnRolesChanging(value);
+                ReportPropertyChanging("Roles");
+                _Roles = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Roles");
+                OnRolesChanged();
             }
         }
-        private global::System.Boolean _IsAdmin;
-        partial void OnIsAdminChanging(global::System.Boolean value);
-        partial void OnIsAdminChanged();
+        private global::System.String _Roles;
+        partial void OnRolesChanging(global::System.String value);
+        partial void OnRolesChanged();
 
         #endregion
     

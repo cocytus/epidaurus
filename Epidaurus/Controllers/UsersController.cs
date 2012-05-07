@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using Epidaurus.Domain.Entities;
 using Epidaurus.Security;
+using Epidaurus.ViewModels.UserEditorViewModels;
 
 namespace Epidaurus.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = EpiRoles.Admin)]
     public class UsersController : Controller
     {
         //
@@ -35,17 +36,26 @@ namespace Epidaurus.Controllers
         // POST: /Users/Create
 
         [HttpPost]
-        public ActionResult Create([Bind(Exclude = "LastLogin")] User user)
+        public ActionResult Create([Bind(Exclude = "LastLogin")] UserViewModel userVm)
         {
+            if (string.IsNullOrWhiteSpace(userVm.Password))
+                ModelState.AddModelError("Password", "Password not be empty");
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     using (var db = EpidaurusDbContainer.Create())
                     {
-                        user.LastLogin = new DateTime(2000, 1, 1);
-                        if (!string.IsNullOrWhiteSpace(user.Password))
-                            user.Password = SecurityService.GetPasswordHash(user.Password);
+                        var user = new User()
+                        {
+                            Username = userVm.Username,
+                            Name = userVm.Name,
+                            Password = SecurityService.GetPasswordHash(userVm.Password),
+                            Roles = userVm.Roles ?? "",
+                            LastLogin = new DateTime(2000, 1, 1),
+                        };
+                           
 
                         db.AddToUsers(user);
                         db.SaveChanges();
@@ -59,7 +69,7 @@ namespace Epidaurus.Controllers
                 }
             }
 
-            return View(user);
+            return View(userVm);
         }
         
         //
@@ -70,8 +80,9 @@ namespace Epidaurus.Controllers
             using (var db = EpidaurusDbContainer.Create())
             {
                 var user = db.Users.First(u => u.Username == id);
-                user.Password = "";
-                return View(user);
+                var vm = (UserViewModel)user;
+                vm.Password = "";
+                return View(vm);
             }
         }
 
@@ -79,7 +90,7 @@ namespace Epidaurus.Controllers
         // POST: /Users/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(string id, [Bind(Exclude = "LastLogin")] User user)
+        public ActionResult Edit(string id, [Bind(Exclude = "LastLogin")] UserViewModel user)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +101,7 @@ namespace Epidaurus.Controllers
                         var oldUser = db.Users.First(u => u.Username == id);
                         if (!string.IsNullOrWhiteSpace(user.Password))
                             oldUser.Password = SecurityService.GetPasswordHash(user.Password);
-                        oldUser.IsAdmin = user.IsAdmin;
+                        oldUser.Roles = user.Roles ?? "";
                         oldUser.Name = user.Name;
                         db.SaveChanges();
                     }

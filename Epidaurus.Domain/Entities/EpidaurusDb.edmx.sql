@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 11/28/2011 20:22:58
--- Generated from EDMX file: C:\Dev\Externals\epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
+-- Date Created: 05/07/2012 21:24:16
+-- Generated from EDMX file: C:\Dev\Web\Epidaurus\Epidaurus.Domain\Entities\EpidaurusDb.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -99,7 +99,7 @@ CREATE TABLE [dbo].[Users] (
     [Password] nvarchar(max)  NOT NULL,
     [LastLogin] datetime  NOT NULL,
     [Name] nvarchar(64)  NOT NULL,
-    [IsAdmin] bit  NOT NULL
+    [Roles] nvarchar(128)  NULL
 );
 GO
 

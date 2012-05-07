@@ -39,14 +39,15 @@ namespace Epidaurus.ViewModels
                 Username = user.Username,
                 Name = user.Name,
                 LastLogin = user.LastLogin,
-                IsAdmin = user.IsAdmin
+                Roles = user.Roles.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
             };
         }
 
-        public bool IsAdmin { get; set; }
         public DateTime LastLogin { get; set; }
         public string Name { get; set; }
         public string Username { get; set; }
+        public string Password { get; set; }
+        public string[] Roles { get; set; }
     }
 
     public class MovieFilterViewModel
