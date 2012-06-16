@@ -5,6 +5,7 @@ using System.Web;
 using Epidaurus.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using Epidaurus.Domain.DataValidation;
+using Epidaurus.Security;
 
 namespace Epidaurus.ViewModels.UserEditorViewModels
 {
@@ -35,7 +36,7 @@ namespace Epidaurus.ViewModels.UserEditorViewModels
         [StringLength(64, MinimumLength = 2)]
         public string Name { get; set; }
 
-        [SpearatedListOf(',', new string[] { "Admin", "Downloader" }, AllowEmpty=true, CleanWhitespace=true)]
+        [SpearatedListOf(',', new string[] { EpiRoles.Admin, EpiRoles.Downloader, EpiRoles.NoFullScreenImages }, AllowEmpty=true, CleanWhitespace=true)]
         public string Roles { get; set; }
 
         public DateTime LastLogin { get; set; }

@@ -11,9 +11,12 @@
         @if (movie.ImageUrl != null)
         { 
             <div style="float: right">
-                <div class="posterFullSize">
-                    <img src="@Url.Action("Poster", new { id = @movie.ImdbId })" alt="Poster"/>
-                </div>
+                @if (SecurityService.LoggedInUser == null || !SecurityService.LoggedInUser.IsInRole(EpiRoles.NoFullScreenImages))
+                {
+                    <div class="posterFullSize">
+                        <img src="@Url.Action("Poster", new { id = @movie.ImdbId })" alt="Poster"/>
+                    </div>
+                }
                 <img class="posterImage" src="@Url.Action("Poster", new { id = @movie.ImdbId })" width="200" alt="Poster" /> 
             </div>
         }
@@ -21,6 +24,7 @@
         <table>
             <tr>
                 <td class="movieEntryFirstColumn">
+
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole(EpiRoles.Admin))
                     {
                         <text>
