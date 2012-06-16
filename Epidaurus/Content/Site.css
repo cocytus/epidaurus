@@ -280,3 +280,18 @@ ul.horiziontalList
 {
     width: 100px;
 }
+
+.movieActions 
+{
+    display: none;
+    position: absolute;
+    border: 1px solid lightblue;
+    background: #202020;
+    padding: 0.5em;
+}
+
+.movieActions a 
+{
+    display: block;
+    margin-bottom: 0.5em;
+}    

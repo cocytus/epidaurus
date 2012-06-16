@@ -233,6 +233,15 @@
             });
         });
 
+        $(".showActions").hover(
+            function() {
+                $(this).children(".movieActions").show("fast");
+            },
+            function() {
+                $(this).children(".movieActions").hide("fast");
+            }
+        );
+
         SetupTrailerDialog();
 
         SetupSpacing();
