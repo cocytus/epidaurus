@@ -325,7 +325,7 @@ namespace Epidaurus.Controllers
                 var movie = _movieSystemService.GetMovieById(id);
                 var samplePaths = (from mas in movie.MovieAtStorages 
                                    where mas.StorageLocation.Type=="Folder" && mas.SampleRelativePath != null 
-                                   select Path.Combine(mas.StorageLocation.Data1, mas.SampleRelativePath)).ToList();
+                                   select Path.Combine(mas.StorageLocation.Data1, mas.SampleRelativePath.TrimStart('\\'))).ToList();
                 if (samplePaths.Count == 0)
                     throw new InvalidOperationException("Movie does not have a sample");
                 var samplePath = (from sp in samplePaths where System.IO.File.Exists(sp) select sp).FirstOrDefault();

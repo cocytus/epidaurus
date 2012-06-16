@@ -11,7 +11,7 @@
         @if (movie.ImageUrl != null)
         { 
             <div style="float: right">
-                @if (SecurityService.LoggedInUser == null || !SecurityService.LoggedInUser.IsInRole(EpiRoles.NoFullScreenImages))
+                @if (SecurityService.LoggedInUser == null || !SecurityService.LoggedInUser.RolesList.Contains(EpiRoles.NoFullScreenImages))
                 {
                     <div class="posterFullSize">
                         <img src="@Url.Action("Poster", new { id = @movie.ImdbId })" alt="Poster"/>

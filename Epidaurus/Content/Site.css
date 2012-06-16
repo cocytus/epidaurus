@@ -248,6 +248,7 @@ input, select
     background: #202020;
     color: White;
     border: 1px solid #505050;
+    padding: 0px;
 }
 
 select option:hover
