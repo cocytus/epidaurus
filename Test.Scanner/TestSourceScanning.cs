@@ -20,11 +20,23 @@ namespace Test.Scanner
 
         private DirResult ScanTestFolder()
         {
-            var fullPath = Path.GetFullPath(@"..\..\..\..\..\Test.Scanner\TestDir");
-            if (!Directory.Exists(fullPath))
-                throw new InvalidOperationException("Scanner testdir invalid: " + fullPath);
-            var scanner = (new ScannerFactory()).CreateFromTypeId("Folder", fullPath, null, "base");
+            var fullPath = GetTestDirPath();
+            var scanner = (new ScannerFactory()).CreateFromTypeId("Folder", fullPath, null, "");
             return scanner.Scan();
+        }
+
+        private static string GetTestDirPath()
+        {
+            var baseDir = "Test.Scanner\\TestDir";
+
+            for (int i = 0; i < 10; i++)
+            {
+                var test = string.Join("", Enumerable.Range(0,i).Select(cnt=>"..\\")) + baseDir;
+                var path = Path.GetFullPath(test);
+                if (Directory.Exists(path))
+                    return path;
+            }
+            throw new InvalidOperationException("Could not find scanner testdir");
         }
 
         [TestMethod]
@@ -35,8 +47,8 @@ namespace Test.Scanner
             var rawMovieResults = MovieFinder.FindMovies(rootDirResult).ToArray();
             Trace.WriteLine(rawMovieResults);
 
-            var thj = rawMovieResults.Single(sr => sr.Path == @"base\Voksenfilmer\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH.mkv");
-            Assert.AreEqual(@"base\Voksenfilmer\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH\Sample\blappy.mkv", thj.SamplePath);
+            var thj = rawMovieResults.Single(sr => sr.Path == @"\Voksenfilmer\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH.mkv");
+            Assert.AreEqual(@"\Voksenfilmer\Fancy.Movie.2003.720p.BluRay.DTS.5.1.x264-BLAHBLAH\Sample\blappy.mkv", thj.SamplePath);
             Assert.AreEqual("Fancy Movie", thj.CleanedName);
             Assert.AreEqual("tt8765432", thj.ImdbId);
             Assert.AreEqual((short)2003, thj.Year);
@@ -44,19 +56,19 @@ namespace Test.Scanner
             Assert.IsFalse(thj.SeriesSeason.HasValue);
             Assert.IsFalse(thj.SeriesEpisode.HasValue);
 
-            var bf1 = rawMovieResults.Single(sr => sr.Path == @"base\Barnefilmer\Barnefilm.mkv");
+            var bf1 = rawMovieResults.Single(sr => sr.Path == @"\Barnefilmer\Barnefilm.mkv");
             Assert.IsNull(bf1.SamplePath);
-            var bf2 = rawMovieResults.Single(sr => sr.Path == @"base\Barnefilmer\Barnefilm2.avi");
+            var bf2 = rawMovieResults.Single(sr => sr.Path == @"\Barnefilmer\Barnefilm2.avi");
             Assert.IsNull(bf1.SamplePath);
 
-            var simp1 = rawMovieResults.Single(sr => sr.Path == @"base\Serier\Simpsons\The.Simpsons.S22E08.The Fight Before Christmas.720p.WEB-DL.DD5.1.H.264-LP.mkv");
+            var simp1 = rawMovieResults.Single(sr => sr.Path == @"\Serier\Simpsons\The.Simpsons.S22E08.The Fight Before Christmas.720p.WEB-DL.DD5.1.H.264-LP.mkv");
             Assert.AreEqual(simp1.SeriesSeason.Value, 22);
             Assert.AreEqual(simp1.SeriesEpisode.Value, 8);
 
-            var hm = rawMovieResults.Single(sr => sr.Path == @"base\Voksenfilmer\Some movie on DVD 2003\file01.vob");
-            Assert.AreEqual(@"base\Voksenfilmer\Some movie on DVD 2003\sample.mkv", hm.SamplePath);
+            var hm = rawMovieResults.Single(sr => sr.Path == @"\Voksenfilmer\Some movie on DVD 2003\file01.vob");
+            Assert.AreEqual(@"\Voksenfilmer\Some movie on DVD 2003\sample.mkv", hm.SamplePath);
 
-            Assert.IsFalse(rawMovieResults.Any(sr => sr.Path == @"base\Voksenfilmer\Some movie on DVD 2003\file02.vob"));
+            Assert.IsFalse(rawMovieResults.Any(sr => sr.Path == @"\Voksenfilmer\Some movie on DVD 2003\file02.vob"));
 
             foreach (var mr in rawMovieResults)
             {
@@ -68,7 +80,7 @@ namespace Test.Scanner
         private void TestScanningLocation(string location)
         {
             var sw = Stopwatch.StartNew();
-            var scanner = (new ScannerFactory()).CreateFromTypeId("Folder", location, null, "base");
+            var scanner = (new ScannerFactory()).CreateFromTypeId("Folder", location, null, "");
             MovieFinder.MinimumMovieSize = 100000000;
             var movies = MovieFinder.FindMovies(scanner.Scan());
             Trace.WriteLine(string.Format("Scanning took {0}ms", sw.ElapsedMilliseconds));

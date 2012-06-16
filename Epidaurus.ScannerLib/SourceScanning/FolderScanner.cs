@@ -26,7 +26,7 @@ namespace Epidaurus.ScannerLib.SourceScanning
         {
             var di = new DirectoryInfo(_rootPath);
             var dr = Scan(null, di);
-            dr.Name = !string.IsNullOrEmpty(_rebase) ? _rebase : _rootPath;
+            dr.Name = "";
             return dr;
         }
 

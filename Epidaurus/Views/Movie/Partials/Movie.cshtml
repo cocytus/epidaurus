@@ -24,13 +24,19 @@
                     @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole(EpiRoles.Admin))
                     {
                         <text>
-                        <a href="javascript:void(0);" onclick="UpdateMovie(@movie.Id, 'mc_@(movie.Id)')">u</a>
-                        <a href="http://www.themoviedb.org/movie/@movie.TmdbId">T</a>
-                        <a href="javascript:void(0);" onclick="UpdateTmdbId(@movie.Id, 'mc_@(movie.Id)')">e</a>
+                        <a href="javascript:void(0);" onclick="UpdateMovie(@movie.Id, 'mc_@(movie.Id)')">Upd</a>
+                        <a href="http://www.themoviedb.org/movie/@movie.TmdbId">Tmdb</a>
+                        <a href="javascript:void(0);" onclick="UpdateTmdbId(@movie.Id, 'mc_@(movie.Id)')">TmdbId?</a>
+                        </text>
+                    }
+                    @if (SecurityService.LoggedInUser != null && SecurityService.LoggedInUser.IsInRole(EpiRoles.Downloader))
+                    { 
+                        <text>
                         @if (Model.HasSample)
                         { 
-                            <a href="@Url.Action("DownloadSample", new { id = movie.Id })">P</a>
+                            <a href="@Url.Action("DownloadSample", new { id = movie.Id })">Sample</a>
                         }
+                        <a href="@Url.Action("DownloadMovie", new { id = movie.Id })">Download movie</a>
                         </text>
                     }
                 </td> 

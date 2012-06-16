@@ -323,7 +323,9 @@ namespace Epidaurus.Controllers
             try
             {
                 var movie = _movieSystemService.GetMovieById(id);
-                var samplePaths = (from mas in movie.MovieAtStorages where mas.SampleRelativePath != null select mas.SampleRelativePath).ToList();
+                var samplePaths = (from mas in movie.MovieAtStorages 
+                                   where mas.StorageLocation.Type=="Folder" && mas.SampleRelativePath != null 
+                                   select Path.Combine(mas.StorageLocation.Data1, mas.SampleRelativePath)).ToList();
                 if (samplePaths.Count == 0)
                     throw new InvalidOperationException("Movie does not have a sample");
                 var samplePath = (from sp in samplePaths where System.IO.File.Exists(sp) select sp).FirstOrDefault();
@@ -336,6 +338,35 @@ namespace Epidaurus.Controllers
             {
                 throw new HttpException(404, "Not found: " + ex.Message);
             }
+        }
+
+        public ActionResult DownloadMovie(int id, int? idx)
+        {
+            try
+            {
+                var movie = _movieSystemService.GetMovieById(id);
+                var mas = movie.MovieAtStorages.ToList();
+                if (mas.Count > 1)
+                {
+                    if (idx != null)
+                        return DownloadMovie(mas[idx.Value]);
+                    return View("MoviePathSelect", mas);
+                }
+                else
+                    return DownloadMovie(mas[0]);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpException(404, "Not found: " + ex.Message);
+            }
+        }
+
+        private ActionResult DownloadMovie(MovieAtStorage mas)
+        {
+            if (string.IsNullOrEmpty(mas.StorageLocation.Rebase))
+                throw new InvalidOperationException("No rebase location");
+
+            return Redirect(mas.StorageLocation.Rebase + mas.RelativePath.Replace("\\", "/"));
         }
 
         #region Poster
