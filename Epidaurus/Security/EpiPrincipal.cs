@@ -29,8 +29,12 @@ namespace Epidaurus.Security
 
         public bool IsInRole(string role)
         {
+            if (_roles.Contains(EpiRoles.Admin))
+                return true;
             return _roles.Contains(role);
         }
+
+        public string RolesList { get { return string.Join(",", _roles); } }
     }
 
     //[Serializable]
@@ -43,7 +47,7 @@ namespace Epidaurus.Security
 
         public string AuthenticationType
         {
-            get { return "Custom"; }
+            get { return "Forms authentication"; }
         }
 
         public bool IsAuthenticated

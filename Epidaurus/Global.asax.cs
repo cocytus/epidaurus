@@ -17,6 +17,8 @@ namespace Epidaurus
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        private static readonly NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -43,9 +45,9 @@ namespace Epidaurus
             RegisterRoutes(RouteTable.Routes);
         }
 
-        protected void Application_PreRequestHandlerExecute()
+        protected void Application_AuthenticateRequest(Object sender, EventArgs e)
         {
-            Security.SecurityService.TryLoadCurrentPrincipalFromSession();
+            Security.SecurityService.TryLoadCurrentPrincipalFromCookies();
         }
 
         private static void SetupDependencyResolver()

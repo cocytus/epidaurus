@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using Epidaurus.Domain.Entities;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 
 namespace Epidaurus.Security
 {
@@ -15,6 +16,8 @@ namespace Epidaurus.Security
     public static class SecurityService
     {
         private static SHA1Managed _sha1 = new SHA1Managed();
+        private static readonly NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
 
         public static bool Login(string username, string password)
         {
@@ -41,6 +44,7 @@ namespace Epidaurus.Security
             var roles = user.Roles.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             var principal = new EpiPrincipal(user.Username, roles);
             SetCurrentPrincipal(principal);
+            _log.Trace("Loginuser: User: {0} Roles: {1}", user.Username, user.Roles);
         }
 
         #region Persistent login cookie stuff
@@ -131,6 +135,7 @@ namespace Epidaurus.Security
 
         public static void Logout(HttpCookieCollection requestCookies, HttpCookieCollection responseCookies)
         {
+            FormsAuthentication.SignOut();
             Thread.CurrentPrincipal = null;
             HttpContext.Current.Session.Remove("EpiPrincipal");
             ForgetLoggedInUser(requestCookies, responseCookies);
@@ -138,20 +143,33 @@ namespace Epidaurus.Security
 
         private static void SetCurrentPrincipal(EpiPrincipal principal)
         {
-            HttpContext.Current.Session.Add("EpiPrincipal", principal);
+            FormsAuthentication.SetAuthCookie(principal.Identity.Name, true);
+
+            var ticket = new FormsAuthenticationTicket(1,
+              principal.Identity.Name,
+              DateTime.Now,
+              DateTime.Now.AddMinutes(120),
+              false,
+              principal.RolesList,
+              FormsAuthentication.FormsCookiePath);
+
+            string encTicket = FormsAuthentication.Encrypt(ticket);
+
+            HttpContext.Current.Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
+            HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;
         }
 
-        public static void TryLoadCurrentPrincipalFromSession()
+        public static void TryLoadCurrentPrincipalFromCookies()
         {
-            if (HttpContext.Current.Session == null)
-                return;
-
-            var p = HttpContext.Current.Session["EpiPrincipal"] as EpiPrincipal;
-            if (p != null)
+            var authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (authCookie != null)
             {
-                Thread.CurrentPrincipal = p;
-                HttpContext.Current.User = p;
+                var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                string[] roles = authTicket.UserData.Split(new Char[] { ',' });
+                EpiPrincipal userPrincipal = new EpiPrincipal(authTicket.Name, roles);
+                HttpContext.Current.User = userPrincipal;
+                Thread.CurrentPrincipal = userPrincipal;
             }
         }
 
@@ -159,7 +177,7 @@ namespace Epidaurus.Security
         {
             get
             {
-                return Thread.CurrentPrincipal as EpiPrincipal;
+                return HttpContext.Current.User as EpiPrincipal;
             }
         }
     }
